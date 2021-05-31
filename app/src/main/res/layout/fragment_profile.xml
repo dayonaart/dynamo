@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.profile.ProfileFragment">
+
+   <RelativeLayout
+       android:paddingHorizontal="20dp"
+       android:gravity="center"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+       <TextView
+           android:layout_marginBottom="20dp"
+           android:gravity="center"
+           android:id="@+id/tv_profile"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="This is profile Fragment" />
+
+       <com.google.android.material.button.MaterialButton
+           android:layout_below="@id/tv_profile"
+           android:gravity="center"
+           style="@style/ButtonTheme"
+           android:background="@drawable/rounded_button_selector"
+           android:text="LOGOUT"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"/>
+   </RelativeLayout>
+</FrameLayout>

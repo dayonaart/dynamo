@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="id.kumparan.dynamo">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Dynamo"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".pages.DetailCommunityActivity"/>
+        <activity android:name=".pages.CreateThreadActivity" />
+        <activity android:name=".ActivationCodeActivity" />
+        <activity android:name=".CreateProfileActivity" />
+        <activity android:name=".pages.DetailThreadActivity" />
+        <activity android:name=".pages.SearchActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".IntroActivity" />
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".RegisterActivity" />
+        <activity
+            android:name=".StartingActivity"
+            android:theme="@style/Theme.Dynamo.Tab" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
+    </application>
+
+</manifest>

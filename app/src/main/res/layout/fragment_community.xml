@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.community.CommunityFragment">
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/communityTab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/homeToolbar"
+        android:layout_marginEnd="100dp"
+        android:paddingBottom="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabIndicator="@drawable/tab_indicator"
+        app:tabIndicatorFullWidth="false"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/black"
+        app:tabTextAppearance="@style/TitleTabAppearance"
+        app:tabTextColor="@color/kumparan_gray40" />
+
+    <View
+        android:layout_marginBottom="20dp"
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_below="@id/communityTab"
+        android:background="#D0E8E8E8" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/communityViewPager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/divider"
+        android:layout_centerInParent="true" />
+</RelativeLayout>

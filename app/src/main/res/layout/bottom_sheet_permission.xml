@@ -1,0 +1,60 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/AppModalStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="false"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:paddingHorizontal="20dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_mini_folder" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:drawablePadding="15dp"
+        android:gravity="center"
+        android:paddingVertical="20dp"
+        android:text="Berikan izin agar kamu dapat memilih foto sesuai keinginan"
+        android:textSize="18sp" />
+
+    <TextView
+        android:textColor="@color/kumparan_blue48"
+        android:id="@+id/alwayRejectPermission"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:drawablePadding="15dp"
+        android:gravity="center"
+        android:paddingVertical="20dp"
+        android:text="Tolak &amp; jangan tanya lagi"
+        android:textSize="18sp" />
+
+    <TextView
+        android:textColor="@color/kumparan_blue48"
+        android:id="@+id/accPermission"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:drawablePadding="15dp"
+        android:gravity="center"
+        android:paddingVertical="20dp"
+        android:text="Izinkan"
+        android:textSize="18sp" />
+
+    <TextView
+        android:textColor="@color/kumparan_blue48"
+        android:id="@+id/rejectPermission"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:drawablePadding="15dp"
+        android:gravity="center"
+        android:paddingVertical="20dp"
+        android:text="Tolak"
+        android:textSize="18sp" />
+
+</LinearLayout>
+

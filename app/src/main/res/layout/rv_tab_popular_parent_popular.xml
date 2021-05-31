@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context=".ui.community.rv.PopularParentRvAdapter">
+
+    <TextView
+        android:id="@+id/categoryTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="Category"
+        android:textColor="@color/black"
+        android:textStyle="bold" />
+
+    <TextView
+        android:textColor="@color/kumparan_gray60"
+        android:id="@+id/communityTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/categoryTitle"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="Total Community" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_child"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/communityTotal"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal" />
+</RelativeLayout>
+

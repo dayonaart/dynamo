@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".pages.SearchActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="0dp"
+        android:paddingEnd="20dp">
+
+        <ImageView
+            android:id="@+id/popScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="0dp"
+            android:paddingEnd="10dp"
+            android:src="@drawable/ic_arrow_left" />
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/search_background"
+            app:iconifiedByDefault="false"
+            app:queryBackground="@null"
+            app:queryHint="Tulis keyword disini.." />
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/searchTab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="50dp"
+        android:paddingBottom="20dp"
+        app:tabIndicator="@drawable/tab_indicator"
+        app:tabIndicatorColor="@color/kumparan_purple51"
+        app:tabIndicatorFullWidth="false"
+        app:tabSelectedTextColor="@color/black"
+        app:tabTextAppearance="@style/TitleTabAppearance"
+        app:tabTextColor="@color/kumparan_gray40" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_below="@id/homeTab"
+        android:layout_marginTop="20dp"
+        android:background="#D0E8E8E8" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/searchViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="10dp" />
+</LinearLayout>

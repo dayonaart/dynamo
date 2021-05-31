@@ -1,0 +1,148 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Dynamo" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+        <item name="colorPrimary">@color/kumparan_purple51</item>
+        <item name="colorPrimaryVariant">@color/kumparan_purple70</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/kumparan_purple51</item>
+        <item name="colorSecondaryVariant">@color/kumparan_purple51</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+        <item name="colorButtonNormal">@color/kumparan_purple70</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/notosans_regular</item>
+    </style>
+    <!-- Tabs application theme. -->
+    <style name="Theme.Dynamo.Tab" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+        <item name="colorPrimary">@color/kumparan_purple51</item>
+        <item name="colorPrimaryVariant">@color/kumparan_purple70</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/kumparan_purple51</item>
+        <item name="colorSecondaryVariant">@color/kumparan_purple51</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+        <item name="colorButtonNormal">@color/kumparan_purple70</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/notosans_regular</item>
+    </style>
+
+    <style name="TitleTabAppearance" parent="TextAppearance.AppCompat.Menu">
+        <item name="android:fontFamily">@font/notosans_bold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:width">30dp</item>
+    </style>
+
+    <style name="ButtonOutlineTheme">
+        <item name="android:gravity">center</item>
+        <item name="cornerRadius">30dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="backgroundTint">@color/white</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/kumparan_purple51</item>
+        <item name="strokeWidth">0.3dp</item>
+        <item name="strokeColor">@color/kumparan_purple70</item>
+        <item name="android:fontFamily">@font/notosans_regular</item>
+    </style>
+
+    <style name="ButtonTheme">
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="cornerRadius">30dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="backgroundTint">@color/kumparan_purple51</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Button</item>
+        <item name="android:fontFamily">@font/notosans_regular</item>
+    </style>
+    <style name="ButtonThemeGray">
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="cornerRadius">30dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="backgroundTint">@color/kumparan_gray40</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Button</item>
+        <item name="android:fontFamily">@font/notosans_regular</item>
+    </style>
+    <style name="ButtonThemeMini">
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="cornerRadius">30dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="backgroundTint">@color/kumparan_purple51</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Button</item>
+        <item name="android:fontFamily">@font/notosans_regular</item>
+    </style>
+
+    <style name="MaterialButtonStyle" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="backgroundTint">@color/button_disabled</item>
+    </style>
+    <style name="MaterialButtonStyle2" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="backgroundTint">@color/button_disabled</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">3dp</item>
+        <item name="android:paddingBottom">3dp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="textField">
+        <item name="android:state_enabled">true</item>
+        <item name="android:shape">rectangle</item>
+        <item name="color">@color/white</item>
+        <item name="strokeColor">@color/kumparan_purple70</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="android:radius">10dp</item>
+        <item name="android:fontFamily">@font/notosans_regular</item>
+    </style>
+
+    <style name="searchField">
+        <item name="android:solidColor">@color/kumparan_gray20</item>
+        <item name="cornerRadius">10dp</item>
+        <item name="android:fontFamily">@font/notosans_regular</item>
+    </style>
+
+    <style name="CustomDialogTheme">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+    <style name="AppBottomSheetDialogTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+    </style>
+
+    <style name="AppModalStyle"
+        parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bottom_sheet_shape</item>
+    </style>
+    <style name="SpinnerTheme">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/spinner_background</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:popupBackground">#DFFFFFFF</item>
+    </style>
+</resources>

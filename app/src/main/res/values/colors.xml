@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="kumparan_purple51">#5F4ABC</color>
+    <color name="kumparan_purple70">#9C8FD6</color>
+    <color name="kumparan_purple90">#EFECF8</color>
+    <color name="kumparan_grey">#FF5F4ABC</color>
+    <color name="kumparan_cyan41">#20BFBE</color>
+    <color name="kumparan_cyan70">#7CE9E9</color>
+    <color name="kumparan_cyan90">#D3F8F8</color>
+    <color name="kumparan_red56">#E43C4A</color>
+    <color name="kumparan_red70">#ED7882</color>
+    <color name="kumparan_red90">#F9D2D5</color>
+    <color name="kumparan_green55">#66C653</color>
+    <color name="kumparan_green70">#99D98C</color>
+    <color name="kumparan_blue48">#05AFF2</color>
+    <color name="kumparan_blue70">#69D2FC</color>
+    <color name="kumparan_blue90">#CDF0FE</color>
+    <color name="kumparan_gray20">#F2F2F2</color>
+    <color name="kumparan_gray40">#CCCCCC</color>
+    <color name="kumparan_gray60">#999999</color>
+    <color name="kumparan_gray80">#333333</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00000000</color>
+    <color name="grey">#D0878282</color>
+
+</resources>

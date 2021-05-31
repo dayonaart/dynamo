@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <layer-list>
+            <item>
+                <shape>
+                    <stroke android:width="0.5dp" />
+                    <solid android:color="@color/white" />
+                    <corners android:radius="5dp" />
+                    <padding android:left="18dp" />
+                </shape>
+            </item>
+            <item android:drawable="@drawable/ic_arrow_dropdown" android:gravity="end|center_vertical" android:end="10dp"/>
+            <item android:width="@dimen/font_size_24" android:height="@dimen/font_size_24" android:bottom="10dp" android:drawable="@drawable/dynamo_profile" android:gravity="start|center_vertical" android:top="10dp" />
+        </layer-list>
+    </item>
+</selector>

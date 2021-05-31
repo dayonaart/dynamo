@@ -1,0 +1,55 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/AppModalStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="false"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:paddingHorizontal="20dp">
+
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="100dp"
+            android:layout_height="8dp"
+            android:background="@drawable/rounded_button"
+            app:backgroundTint="@color/kumparan_gray40" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/openCamera"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:drawablePadding="15dp"
+        android:paddingVertical="20dp"
+        android:text="Ambil gambar dari kamera"
+        android:textSize="18sp"
+        app:drawableStartCompat="@drawable/ic_mini_camera" />
+
+    <TextView
+        android:id="@+id/openGallery"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:drawablePadding="15dp"
+        android:paddingVertical="20dp"
+        android:text="Ambil gambar dari Gallery"
+        android:textSize="18sp"
+        app:drawableStartCompat="@drawable/ic_mini_gallery" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/cancelBottomSheet"
+        style="@style/ButtonOutlineTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="20dp"
+        android:layout_marginTop="20dp"
+        android:text="Batal" />
+</LinearLayout>
+
