@@ -6,9 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import id.kumparan.dynamo.R
-import id.kumparan.dynamo.model.AllCommentListModel
+import id.kumparan.dynamo.model.ListThreadModel
 import id.kumparan.dynamo.pages.data.ThreadChatData
-import id.kumparan.dynamo.utility.Utility
 import kotlinx.android.synthetic.main.rv_thread_chat_item.view.*
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -16,8 +15,8 @@ import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.random.Random
 
-class ThreadChatRVAdapter(val data: List<AllCommentListModel>) :
-    RecyclerView.Adapter<ThreadChatRVAdapter.ViewHolder>() {
+class DetailThreadChatRVAdapter(private val data: List<ListThreadModel>) :
+    RecyclerView.Adapter<DetailThreadChatRVAdapter.ViewHolder>() {
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val random = Random
         private val username = view.userName
@@ -34,14 +33,13 @@ class ThreadChatRVAdapter(val data: List<AllCommentListModel>) :
             .joinToString("");
 
         @SuppressLint("SetTextI18n")
-        fun bindThread(threadChatData: AllCommentListModel) {
-            username.text = threadChatData.username
-            message.text = threadChatData.content
-            likeCount.text = threadChatData.totalVotes.toString()
-            dateChat.text = threadChatData.createdAt
+        fun bindThread(listThreadModel: ListThreadModel) {
+            username.text = listThreadModel.username
+            message.text = listThreadModel.content
+            likeCount.text = "Vote"
+            dateChat.text = listThreadModel.createdAt
 
         }
-
 
         @SuppressLint("SimpleDateFormat")
         private fun dateNow(): List<String>? {

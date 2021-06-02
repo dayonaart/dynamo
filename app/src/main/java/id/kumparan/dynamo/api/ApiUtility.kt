@@ -2,11 +2,14 @@ package id.kumparan.dynamo.api
 
 import android.annotation.SuppressLint
 import android.util.Log
+import id.kumparan.dynamo.ReportThreadPayload
+import id.kumparan.dynamo.ReportThreadResponse
 import id.kumparan.dynamo.model.*
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 class ApiUtility {
     fun getAllCommunity(communityListModelViewModel: CommunityListModelViewModel) {
@@ -33,6 +36,7 @@ class ApiUtility {
                 }
             })
     }
+
     fun getMyCommunity(myCommunityModelViewModel: MyCommunityModelViewModel, userId: Int) {
         Api.instance().getMyCommunity(userId)
             .enqueue(object : Callback<WrappedListResponse<MyCommunityModel>> {
@@ -59,7 +63,7 @@ class ApiUtility {
             })
     }
 
-     fun getMyThread(listThreadModelViewModel: MyListThreadModelViewModel,userId:Int) {
+    fun getMyThread(listThreadModelViewModel: MyListThreadModelViewModel, userId: Int) {
         Api.instance().getAllThreadByUser(userId)
             .enqueue(object : Callback<WrappedListResponse<MyListThreadModel>> {
                 override fun onFailure(
@@ -86,7 +90,7 @@ class ApiUtility {
             })
     }
 
-     fun getAllUser(userListModelViewModel:UserListModelViewModel) {
+    fun getAllUser(userListModelViewModel: UserListModelViewModel) {
         Api.instance().getAllUser()
             .enqueue(object : Callback<WrappedListResponse<UserListModel>> {
                 override fun onFailure(
@@ -104,6 +108,81 @@ class ApiUtility {
                     if (response.isSuccessful) {
                         val res = response.body()
                         userListModelViewModel.updateDataList(res?.data)
+
+                    } else {
+                        val error = JSONObject(response.errorBody()!!.string())
+                        Log.d("ERROR", "$error")
+                    }
+                }
+            })
+    }
+
+    fun reportThread(reportThreadPayload: ReportThreadPayload,message:(message:String)->Unit) {
+        Api.instance().reportThread(reportThreadPayload).enqueue(object : Callback<ReportThreadResponse> {
+            override fun onResponse(
+                call: Call<ReportThreadResponse>,
+                response: Response<ReportThreadResponse>
+            ) {
+               val res=response.body()
+                if (response.isSuccessful){
+                    message(res?.status!!)
+                }else{
+                    message(res?.status!!)
+                }
+            }
+
+            override fun onFailure(call: Call<ReportThreadResponse>, t: Throwable) {
+                println("FRONTEND ${t.message}")
+
+            }
+
+        })
+    }
+
+    fun getAllComment(allCommentListModelViewModel:AllCommentListModelViewModel){
+        Api.instance().getAllComment().enqueue(object :Callback<WrappedListResponse<AllCommentListModel>>{
+            override fun onResponse(
+                call: Call<WrappedListResponse<AllCommentListModel>>,
+                response: Response<WrappedListResponse<AllCommentListModel>>
+            ) {
+              val res= response.body()
+                if (response.isSuccessful){
+                    allCommentListModelViewModel.updateData(res?.data!!)
+                }else{
+                    println("ALL COM ERR ${res?.message}")
+
+                }
+            }
+
+            override fun onFailure(
+                call: Call<WrappedListResponse<AllCommentListModel>>,
+                t: Throwable
+            ) {
+                println("ALL COM TR ${t.message}")
+
+            }
+
+        })
+    }
+
+    fun getAllThread(listThreadModelViewModel:ListThreadModelViewModel){
+        Api.instance().getAllThread()
+            .enqueue(object : Callback<WrappedListResponse<ListThreadModel>> {
+                override fun onFailure(
+                    call: Call<WrappedListResponse<ListThreadModel>>,
+                    t: Throwable
+                ) {
+                    Log.d("ERROR", "THIS MESSAGE $t")
+                }
+
+                @SuppressLint("SimpleDateFormat")
+                override fun onResponse(
+                    call: Call<WrappedListResponse<ListThreadModel>>,
+                    response: Response<WrappedListResponse<ListThreadModel>>
+                ) {
+                    if (response.isSuccessful) {
+                        val res = response.body()
+                        listThreadModelViewModel.updateDataList(res?.data!!)
 
                     } else {
                         val error = JSONObject(response.errorBody()!!.string())

@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import id.kumparan.dynamo.R
-import id.kumparan.dynamo.model.ListThreadModel
 import id.kumparan.dynamo.model.MyListThreadModel
 import id.kumparan.dynamo.pages.DetailThreadActivity
 import id.kumparan.dynamo.pages.DetailThreadViewModel
@@ -22,8 +21,14 @@ import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
 
-class MyCommunityRVAdapter(private val data: List<MyListThreadModel>) :
+class MyCommunityRVAdapter(
+    private val data: List<MyListThreadModel>,
+    private var optionsMenuClickListener: OptionsMenuClickListener
+) :
     RecyclerView.Adapter<MyCommunityRVHolder>() {
+    interface OptionsMenuClickListener {
+        fun onOptionsMenuClicked(position: Int)
+    }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, p1: Int): MyCommunityRVHolder {
         return MyCommunityRVHolder(
@@ -36,7 +41,7 @@ class MyCommunityRVAdapter(private val data: List<MyListThreadModel>) :
     override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: MyCommunityRVHolder, position: Int) {
-        holder.bindThread(data[position])
+        holder.bindThread(data[position],optionsMenuClickListener)
     }
 }
 
@@ -50,13 +55,18 @@ class MyCommunityRVHolder(private val context: Context, view: View) :
     private val imgThumbnail = view.imgThumbnail
     private val comments = view.comments
     private val openChat = view.openDetailCommunity
+    private val optionBtn = view.optionBtn
 
     @SuppressLint("SetTextI18n")
-    fun bindThread(myListThreadModel: MyListThreadModel) {
+    fun bindThread(
+        myListThreadModel: MyListThreadModel,
+        optionsMenuClickListener: MyCommunityRVAdapter.OptionsMenuClickListener
+    ) {
         tvName.text = myListThreadModel.communityName
         tvUsername.text = myListThreadModel.username
         tvDate.text = dateNow(myListThreadModel.createdAt)
         tvDesc.text = myListThreadModel.content
+
 //        if ((myListThreadModel.userPhoto != "" && myListThreadModel.userPhoto != null) && !myListThreadModel.userPhoto.contains(
 //                "data"
 //            )
@@ -87,9 +97,10 @@ class MyCommunityRVHolder(private val context: Context, view: View) :
 //
 //            })
 
-        comments.text ="${myListThreadModel.noComments} komentar"
+        comments.text = "${myListThreadModel.noComments} komentar"
         openChat.setOnClickListener {
             val detailThreadView = DetailThreadViewModel(
+                myListThreadModel.id,
                 myListThreadModel.content,
                 myListThreadModel.communityName,
                 myListThreadModel.username,
@@ -99,7 +110,11 @@ class MyCommunityRVHolder(private val context: Context, view: View) :
                 myListThreadModel.noComments
 
             )
-            openChat(context, detailThreadView, myListThreadModel.communityId)
+            openChat(context, detailThreadView)
+        }
+
+        optionBtn.setOnClickListener {
+            optionsMenuClickListener.onOptionsMenuClicked(position)
         }
     }
 
@@ -122,15 +137,11 @@ class MyCommunityRVHolder(private val context: Context, view: View) :
 
     private fun openChat(
         context: Context,
-        detailThreadViewModel: DetailThreadViewModel,
-        communityId: Int?
+        detailThreadViewModel: DetailThreadViewModel?,
     ) {
         val detailThread = Intent(context, DetailThreadActivity::class.java)
         detailThread.putExtra("detailThread", detailThreadViewModel)
         context.startActivity(detailThread)
-//        val detailCommunity = Intent(context, DetailCommunityActivity::class.java)
-//        detailCommunity.putExtra("id",communityId)
-//        context.startActivity(detailCommunity)
     }
 
     private fun convertBase64ToBitmap(b64: String): Bitmap? {

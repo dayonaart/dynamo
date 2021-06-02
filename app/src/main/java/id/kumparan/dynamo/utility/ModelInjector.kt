@@ -35,5 +35,9 @@ object ModelInjector {
         val data = MyListThreadModelRepository.getInstance(Database.getInstance().myListThreadData)
         return MyListThreadModelFactory(data)
     }
+    fun provideAllCommentListViewModelFactory(): AllCommentListModelFactory {
+        val data = AllCommentListModelRepository.getInstance(Database.getInstance().allCommentListModel)
+        return AllCommentListModelFactory(data)
+    }
 }
 

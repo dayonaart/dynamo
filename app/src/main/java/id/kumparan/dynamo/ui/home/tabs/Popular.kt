@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import id.kumparan.dynamo.R
 import id.kumparan.dynamo.api.Api
+import id.kumparan.dynamo.api.ApiUtility
 import id.kumparan.dynamo.api.WrappedListResponse
 import id.kumparan.dynamo.model.*
 import id.kumparan.dynamo.ui.home.rv.PopularCommunityRVAdapter
@@ -65,30 +66,7 @@ class Popular : Fragment() {
 
     private fun getData() {
         pbProgress.visibility = View.VISIBLE
-        Api.instance().getAllThread()
-            .enqueue(object : Callback<WrappedListResponse<ListThreadModel>> {
-                override fun onFailure(
-                    call: Call<WrappedListResponse<ListThreadModel>>,
-                    t: Throwable
-                ) {
-                    Log.d("ERROR", "THIS MESSAGE $t")
-                }
-
-                @SuppressLint("SimpleDateFormat")
-                override fun onResponse(
-                    call: Call<WrappedListResponse<ListThreadModel>>,
-                    response: Response<WrappedListResponse<ListThreadModel>>
-                ) {
-                    if (response.isSuccessful) {
-                        val res = response.body()
-                        listThreadModel().updateDataList(res?.data!!)
-
-                    } else {
-                        val error = JSONObject(response.errorBody()!!.string())
-                        Log.d("ERROR", "$error")
-                    }
-                }
-            })
+        ApiUtility().getAllThread(listThreadModel())
     }
 
     private fun userModel(): UserModel? {

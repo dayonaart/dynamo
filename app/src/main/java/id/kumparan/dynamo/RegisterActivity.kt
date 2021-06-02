@@ -57,9 +57,7 @@ class RegisterActivity : AppCompatActivity() {
             submit(this, payload())
         }
         googleSignup.setOnClickListener {
-            val d=LocalStorage.readLocalToModel(this)
-            println(d)
-//            googleSignUp()
+            googleSignUp()
         }
         facebookSignup.setOnClickListener {
             facebookSignUp(this)

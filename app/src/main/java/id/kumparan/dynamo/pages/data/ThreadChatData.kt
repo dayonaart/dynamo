@@ -8,16 +8,17 @@ import java.io.Serializable
 
 data class ThreadChatData(
     val username: String?,
-    val message: String?,
-    val likeCount: Int?
+    val content: String?,
+    val likeCount: Int?,
+    val replyCount:Int?
 ) : Serializable
 
-class ThreadChatModelFactory(private val homeRepository: ThreadChatRepository)
+class ThreadChatModelFactory(private val threadChatRepository: ThreadChatRepository)
     : ViewModelProvider.NewInstanceFactory() {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return HomeViewModel(homeRepository) as T
+        return HomeViewModel(threadChatRepository) as T
     }
 }
 

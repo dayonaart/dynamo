@@ -1,38 +1,32 @@
 package id.kumparan.dynamo.ui.home.tabs
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
+import android.widget.Toast
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import id.kumparan.dynamo.R
 import id.kumparan.dynamo.RegisterActivity
-import id.kumparan.dynamo.api.Api
+import id.kumparan.dynamo.ReportThreadActivity
 import id.kumparan.dynamo.api.ApiUtility
-import id.kumparan.dynamo.api.WrappedListResponse
 import id.kumparan.dynamo.localstorage.LocalStorage
 import id.kumparan.dynamo.model.*
 import id.kumparan.dynamo.ui.home.rv.MyCommunityRVAdapter
 import id.kumparan.dynamo.utility.ModelInjector
 import kotlinx.android.synthetic.main.fragment_home_tab_my_community.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class MyCommunity : Fragment() {
     private val myListThreadFactory = ModelInjector.provideMyListThreadViewModelFactory()
     private val userFactory = ModelInjector.provideUserViewModelFactory()
-    private val myCommunityFactory = ModelInjector.provideListMyCommunityViewModeFactory()
+    private val allCommentFactory = ModelInjector.provideAllCommentListViewModelFactory()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,25 +44,37 @@ class MyCommunity : Fragment() {
             signUpBtn.setOnClickListener {
                 startActivity(registerActivity)
             }
-            notRegisterLayout.visibility = View.VISIBLE
+            errorLayout.visibility = View.VISIBLE
         } else {
             signUpBtn.visibility = View.GONE
             myThreadModel().getData().observe(viewLifecycleOwner, Observer {
-                val communityAdapter = MyCommunityRVAdapter(it)
-                rvMyCommunity.apply {
+                val data = it.sortedByDescending { d ->
+                    d.createdAt
+                }
+                val communityAdapter =
+                    MyCommunityRVAdapter(data,
+                        object : MyCommunityRVAdapter.OptionsMenuClickListener {
+                            override fun onOptionsMenuClicked(position: Int) {
+                                performOptionsMenuClick(position, data)
+                            }
+
+                        })
+                rvHomeMyCommunity.apply {
                     layoutManager = LinearLayoutManager(context)
                     adapter = communityAdapter
                 }
                 if (it.isNotEmpty()) {
-                    notRegisterLayout.visibility = View.GONE
+                    errorLayout.visibility = View.GONE
                     pbProgress.visibility = View.GONE
                 } else {
 //                    GlobalScope.launch{
 //                        delay(10000L)
-                        ApiUtility().getMyThread(
-                            myThreadModel(), userModel()?.id
-                            !!
-                        )
+                    pbProgress.visibility = View.VISIBLE
+                    ApiUtility().getMyThread(
+                        myThreadModel(), userModel()?.id
+                        !!
+                    )
+                    ApiUtility().getAllComment(allCommentListModel())
 //                    }
                     pbProgress.visibility = View.GONE
                 }
@@ -80,16 +86,46 @@ class MyCommunity : Fragment() {
         val observer = ViewModelProvider(this, userFactory).get(UserViewModel::class.java)
         return observer.getData().value?.data
     }
-    private fun myCommunityModel(): List<MyCommunityModel>? {
-        val observer = ViewModelProvider(this, userFactory).get(MyCommunityModelViewModel::class.java)
-        return observer.getData().value
-    }
-    private fun myThreadModel(): MyListThreadModelViewModel {
-        return ViewModelProvider(this, myListThreadFactory).get(MyListThreadModelViewModel::class.java)
-    }
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
 
+    private fun allCommentListModel(): AllCommentListModelViewModel {
+        return ViewModelProvider(
+            this,
+            allCommentFactory
+        ).get(AllCommentListModelViewModel::class.java)
+
+    }
+
+    private fun myThreadModel(): MyListThreadModelViewModel {
+        return ViewModelProvider(
+            this,
+            myListThreadFactory
+        ).get(MyListThreadModelViewModel::class.java)
+    }
+
+    private fun performOptionsMenuClick(position: Int, data: List<MyListThreadModel>) {
+        val reportThreadActivity = Intent(requireContext(), ReportThreadActivity::class.java)
+        reportThreadActivity.putExtra("data", data[position])
+        val popupMenu =
+            PopupMenu(requireContext(), rvHomeMyCommunity[position].findViewById(R.id.optionBtn))
+        popupMenu.inflate(R.menu.option_menu_thread)
+        popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
+            override fun onMenuItemClick(item: MenuItem?): Boolean {
+                when (item?.itemId) {
+                    R.id.delete -> {
+                        startActivity(reportThreadActivity)
+                        return true
+                    }
+                }
+                return false
+            }
+        })
+        popupMenu.show()
+    }
+
+    // on destroy of view make the binding reference to null
+    override fun onDestroy() {
+        super.onDestroy()
+//        _binding = null
     }
 
 }

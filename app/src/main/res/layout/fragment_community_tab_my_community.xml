@@ -6,60 +6,65 @@
     android:layout_height="match_parent"
     tools:context="ui.community.tabs.MyCommunity">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/notRegisterLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/headerImg"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:src="@drawable/data_not_found"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/there_no_thread"
+                android:textFontWeight="1000"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="@string/come_register"
+                android:textAlignment="center" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/optionBtnCommunity"
+                style="@style/ButtonTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/join_now" />
+        </LinearLayout>
+
+    </ScrollView>
     <ProgressBar
         android:id="@+id/pbProgress"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center" />
 
-    <LinearLayout
-        android:id="@+id/haveNoCommunity"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:paddingHorizontal="20dp"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/headerImg"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_gravity="center"
-            android:adjustViewBounds="true"
-            android:src="@drawable/data_not_found"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/userNotLoginTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/there_no_community"
-            android:textFontWeight="1000"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/userNotLoginDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="@string/come_join_community"
-            android:textAlignment="center" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/optionBtnCommunity"
-            style="@style/ButtonTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/explore_community" />
-    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvMyCommunity"
+        android:id="@+id/rvCommunityMyCommunity"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

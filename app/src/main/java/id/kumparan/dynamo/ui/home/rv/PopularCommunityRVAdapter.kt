@@ -90,6 +90,7 @@ class PopularCommunityRVHolder(private val context: Context, view: View) :
         comments.text = "${listThreadModel.noComments} Komentar"
         openChat.setOnClickListener {
             val detailThreadView = DetailThreadViewModel(
+                listThreadModel.id,
                 listThreadModel.content,
                 listThreadModel.communityName,
                 listThreadModel.username,

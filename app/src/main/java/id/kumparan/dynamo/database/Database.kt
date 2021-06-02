@@ -13,6 +13,7 @@ class Database private constructor() {
     var myCommunityListData = MyCommunityListModelTempData()
     var listThreadData = ListThreadModelTempData()
     var myListThreadData = MyListThreadModelTempData()
+    var allCommentListModel = AllCommentListModelTempData()
     var homeData = HomeTempData()
         private set
 

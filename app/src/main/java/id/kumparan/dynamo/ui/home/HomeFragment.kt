@@ -35,7 +35,7 @@ class HomeFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         val loginActivity = Intent(requireContext(), LoginActivity::class.java)
         val searchActivity = Intent(requireContext(), SearchActivity::class.java)
-        val createThread=Intent(requireContext(), CreateThreadActivity::class.java)
+        val createThread = Intent(requireContext(), CreateThreadActivity::class.java)
         createThreadFAB.setOnClickListener{
             startActivity(createThread)
         }

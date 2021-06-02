@@ -1,4 +1,5 @@
 package id.kumparan.dynamo.pages
+
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Spannable
@@ -27,29 +28,10 @@ class DetailCommunityActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_community)
         val communityId = intent.extras?.get("id") as Int
-        val communityData =
-            ViewModelProvider(this, factory).get(CommunityListModelViewModel::class.java)
-        val data = communityData.getData().map {
-            it.forEach{d->
-                println()
-            }
+        val data = communityListModel().getData().map {
             it.find { f -> f.id == communityId }
         }
-        data.observe(this, {
-            if (it !== null) {
-                communityDetailName.text = it.name
-                communityDetailDescription.text = it.description
-                threadCount.text =
-                    setCountText("${it.noThreads}", R.color.kumparan_purple51, Typeface.BOLD)
-                threadCount.append(setCountText("\nThread", R.color.black, Typeface.NORMAL))
-                memberCount.text =
-                    setCountText("${it.noUsers}", R.color.kumparan_purple51, Typeface.BOLD)
-                memberCount.append(setCountText("\nMember", R.color.black, Typeface.NORMAL))
-            }
-        })
-        userViewModel().getData().observe(this, {
-
-        })
+        initDetailCommunity(data)
         settingTab(data)
         popScreen.setOnClickListener {
             onBackPressed()
@@ -58,6 +40,11 @@ class DetailCommunityActivity : AppCompatActivity() {
 
         }
 
+    }
+
+
+    private fun communityListModel(): CommunityListModelViewModel {
+        return ViewModelProvider(this, factory).get(CommunityListModelViewModel::class.java)
     }
 
     private fun userViewModel(): UserViewModel {
@@ -82,12 +69,28 @@ class DetailCommunityActivity : AppCompatActivity() {
         return span
     }
 
+    private fun initDetailCommunity(data: LiveData<CommunityListModel?>) {
+        data.observe(this, {
+            if (it !== null) {
+                communityDetailName.text = it.name
+                communityDetailDescription.text = it.description
+                threadCount.text =
+                    setCountText("${it.noThreads}", R.color.kumparan_purple51, Typeface.BOLD)
+                threadCount.append(setCountText("\nThread", R.color.black, Typeface.NORMAL))
+                memberCount.text =
+                    setCountText("${it.noUsers}", R.color.kumparan_purple51, Typeface.BOLD)
+                memberCount.append(setCountText("\nMember", R.color.black, Typeface.NORMAL))
+            }
+        })
+    }
+
     private fun settingTab(communityListLiveData: LiveData<CommunityListModel?>) {
         detailCommunityViewPager.adapter = DetailCommunityViewPager(this, communityListLiveData)
         TabLayoutMediator(detailCommunityTabs, detailCommunityViewPager) { tab, pos ->
             tab.text = fragmentTitleList[pos]
         }.attach()
-        detailCommunityViewPager.registerOnPageChangeCallback(object :ViewPager2.OnPageChangeCallback(){
+        detailCommunityViewPager.registerOnPageChangeCallback(object :
+            ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 detailCommunityViewPager?.adapter?.notifyDataSetChanged()

@@ -186,13 +186,12 @@
             android:gravity="center"
             android:text="Belum dapat kode verifikasi? " />
 
-        <Chronometer
-            android:id="@+id/view_timer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:format="%s detik"
-            android:textColor="@color/kumparan_green55"
-            tools:targetApi="24" />
+    <TextView
+        android:textColor="@color/kumparan_green55"
+        android:id="@+id/countDown"
+        android:text="12:12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

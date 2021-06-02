@@ -48,12 +48,7 @@
                        android:layout_width="0dp"
                        android:layout_height="wrap_content"
                        android:layout_weight="0.5" />
-                   <TextView
-                       android:id="@+id/time"
-                       android:text="time"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content">
-                   </TextView>
+
                </LinearLayout>
             </LinearLayout>
         </LinearLayout>

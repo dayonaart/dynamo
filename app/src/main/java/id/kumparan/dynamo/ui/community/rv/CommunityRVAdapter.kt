@@ -39,10 +39,6 @@ class CommunityRVAdapter(private val data: List<MyCommunityModel>) :
             communityName.text = myCommunityModel.communityName
             communityThread.text = "Thread not found · "
             communityMember.text = "Member not found"
-
-//            communityMember.text = "${myCommunityModel.noUsers} Member"
-//            communityThread.text = "${myCommunityModel.noThreads} Thread - "
-//            communityMember.text = "${myCommunityModel.noUsers} Member"
             if ((myCommunityModel.userPhoto != "" && myCommunityModel.userPhoto != null) && !myCommunityModel.userPhoto.contains(
                     "data"
                 )

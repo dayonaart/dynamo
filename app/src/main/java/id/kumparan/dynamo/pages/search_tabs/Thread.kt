@@ -56,6 +56,9 @@ class Thread : Fragment() {
 class SearchThreadRVAdapter(private val data: List<CommunityListModel>?) :
     RecyclerView.Adapter<SearchCommunityRVHolder>() {
 
+    interface OptionsMenuClickListener {
+        fun onOptionsMenuClicked(position: Int)
+    }
     override fun onCreateViewHolder(viewGroup: ViewGroup, p1: Int): SearchCommunityRVHolder {
         return SearchCommunityRVHolder(
             LayoutInflater.from(viewGroup.context)
@@ -79,7 +82,7 @@ class SearchCommunityRVHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val imgThumbnail = view.imgThumbnail
     private val comments = view.comments
     private val totalCommentRand = (0..400).random()
-
+    private val optionBtn=view.optionBtn
     @SuppressLint("SetTextI18n")
     fun bindHero(communityListModel: CommunityListModel) {
         tvName.text = communityListModel.name
@@ -99,6 +102,9 @@ class SearchCommunityRVHolder(view: View) : RecyclerView.ViewHolder(view) {
 //            })
 //        Picasso.get().load(communityListModel.avatar).into(imgThumbnail)
         comments.text = "$totalCommentRand Komentar"
+        optionBtn.setOnClickListener{
+//            optionsMenuClickListener.onOptionsMenuClicked(position)
+        }
     }
 
     @SuppressLint("SimpleDateFormat")

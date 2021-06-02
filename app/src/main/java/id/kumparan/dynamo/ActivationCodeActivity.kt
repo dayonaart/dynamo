@@ -1,8 +1,8 @@
 package id.kumparan.dynamo
-
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -23,6 +23,7 @@ class ActivationCodeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_activation_code)
+        countDownTimer().start()
         val createProfileActivity = Intent(this, CreateProfileActivity::class.java)
         val readLocalStorage = LocalStorage.readLocalToModel(this)
         val editText =
@@ -35,7 +36,7 @@ class ActivationCodeActivity : AppCompatActivity() {
             readLocalStorage?.verificationCode?.verification_code?.map { it.toString() }
         submitBtn.setOnClickListener {
             val inputCode=editText.map { it.text.toString() }
-            println("$inputCode $codeValidation")
+            println("CODE VER $inputCode $codeValidation")
             if (inputCode == codeValidation){
                 LocalStorage.saveData(this,"isVerify","true")
                 Utility.pushReplaceAll(this, createProfileActivity)
@@ -43,12 +44,17 @@ class ActivationCodeActivity : AppCompatActivity() {
                 errorCardLayout.visibility= View.VISIBLE
             }
         }
+
         closeError.setOnClickListener {
             errorCardLayout.visibility= View.GONE
         }
     }
     private fun userModel(): UserViewModel {
         return ViewModelProvider(this, factory).get(UserViewModel::class.java)
+    }
+
+    private fun resendCode(){
+        countDownTimer().start()
     }
     private fun configureEditText(editText: Array<EditText>) {
         for (et in editText) {
@@ -85,8 +91,26 @@ class ActivationCodeActivity : AppCompatActivity() {
                         et6 -> if (text.isEmpty()) editText[4].requestFocus()
                     }
                 }
-
             })
+        }
+    }
+
+    private fun countDownTimer(): CountDownTimer {
+        return object : CountDownTimer(59000, 1000){
+            override fun onTick(p0: Long) {
+                countDown.text="${(p0/1000)} detik"
+                countDown.setOnClickListener{
+                }
+            }
+
+            override fun onFinish() {
+                countDown.text="Kirim Ulang"
+                countDown.setOnClickListener{
+                    countDownTimer().start()
+                }
+
+            }
+
         }
     }
 }

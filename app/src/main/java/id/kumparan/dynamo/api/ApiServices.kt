@@ -1,10 +1,6 @@
 package id.kumparan.dynamo.api
-
-import android.service.autofill.UserData
 import com.google.gson.annotations.SerializedName
-import id.kumparan.dynamo.LoginPayload
-import id.kumparan.dynamo.RegisterPayload
-import id.kumparan.dynamo.UpdateUserPayload
+import id.kumparan.dynamo.*
 import id.kumparan.dynamo.model.*
 import id.kumparan.dynamo.pages.AddThreadModelPayload
 import id.kumparan.dynamo.pages.AddThreadResponseModel
@@ -24,6 +20,10 @@ interface ApiServices {
     fun login(@Body payload: LoginPayload): @JvmSuppressWildcards Call<User>
 
     @Headers("Content-Type: application/json")
+    @POST("${baseUrl}/report/AddReportToThread")
+    fun reportThread(@Body payload: ReportThreadPayload): @JvmSuppressWildcards Call<ReportThreadResponse>
+
+    @Headers("Content-Type: application/json")
     @POST("${baseUrl}/community/addMember")
     fun joinCommunity(@Body payload: JoinCommunityPayload): @JvmSuppressWildcards Call<WrappedResponse<JoinCommunityResponseDataModel>>
 
@@ -37,8 +37,13 @@ interface ApiServices {
     ): @JvmSuppressWildcards Call<WrappedListResponse<UserListModel>>
 
     @Headers("Content-Type: application/json")
-    @GET("${baseUrl}/comment/getByThread/{threadId}/")
+    @GET("${baseUrl}/comment/getAll")
     fun getAllComment(
+    ): @JvmSuppressWildcards Call<WrappedListResponse<AllCommentListModel>>
+
+    @Headers("Content-Type: application/json")
+    @GET("${baseUrl}/comment/getByThread/{threadId}/")
+    fun getAllCommentByThreadId(
         @Path("id") threadId: Int
     ): @JvmSuppressWildcards Call<WrappedListResponse<Any>>
 
@@ -57,6 +62,7 @@ interface ApiServices {
     @GET("${baseUrl}/thread/")
     fun getAllThread(
     ): @JvmSuppressWildcards Call<WrappedListResponse<ListThreadModel>>
+
 
     @Headers("Content-Type: application/json")
     @GET("${baseUrl}/community/getByUser/{id}")

@@ -1,4 +1,5 @@
 package id.kumparan.dynamo
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -79,7 +80,6 @@ class CreateProfileActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<User>, response: Response<User>) {
                     if (response.isSuccessful) {
                         val res = response.body()
-                        println(res)
                         if (res?.message == "Success") {
                             userViewModel.updateData(res)
                             LocalStorage.saveData(context, "user_session", gson.toJson(res))
@@ -148,6 +148,7 @@ class CreateProfileActivity : AppCompatActivity() {
             .isNotEmpty() && phoneField.text.toString().isNotEmpty())
     }
 
+    @SuppressLint("InflateParams")
     private fun openFile() {
         val btnSheet = layoutInflater.inflate(R.layout.bottom_sheet_dialog, null)
         val btnSheetPermission = layoutInflater.inflate(R.layout.bottom_sheet_permission, null)

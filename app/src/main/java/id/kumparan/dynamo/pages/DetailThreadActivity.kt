@@ -25,21 +25,21 @@ class DetailThreadActivity : AppCompatActivity() {
         collapsing_toolbar.setExpandedTitleColor(
             ContextCompat.getColor(this, R.color.kumparan_purple51)
         )
-        val detailThread = intent.extras?.get("detailThread") as DetailThreadViewModel
+
         popScreen.setOnClickListener {
             onBackPressed()
         }
         toolbar_title.text = "TOOLBAR TITLE"
-        tvMyCommunityName.text = detailThread.username
-        tvMyUsername.text = detailThread.username
-        tvMyCommunityTDesc.text = detailThread.desc
-        tvMyCommunityDate.text = detailThread.communityDate
-        comments.text = "${detailThread.commentCount}"
-        if ((detailThread.photo != "" && detailThread.photo != null) && !detailThread.photo.contains(
+        tvMyCommunityName.text = detailThread().username
+        tvMyUsername.text = detailThread().username
+        tvMyCommunityTDesc.text = detailThread().desc
+        tvMyCommunityDate.text = detailThread().communityDate
+        comments.text = "${detailThread().commentCount}"
+        if ((detailThread().photo != "" && detailThread().photo != null) && !detailThread().photo?.contains(
                 "data"
-            )
+            )!!
         ) {
-            imgThumbnail.setImageBitmap(convertBase64ToBitmap(detailThread.photo))
+            imgThumbnail.setImageBitmap(convertBase64ToBitmap(detailThread().photo!!))
         }
 //        Picasso.get().load(detailThread.photo).into(imgThumbnail,object :Callback{
 //            override fun onSuccess() {
@@ -70,9 +70,11 @@ class DetailThreadActivity : AppCompatActivity() {
 //            adapter=threadAdapter
 //        }
     }
-
+    private fun detailThread(): DetailThreadViewModel {
+        return  intent.extras?.get("detailThread") as DetailThreadViewModel
+    }
     private fun settingTabs() {
-        val adapter = ThreadTabAdapter(this.supportFragmentManager, 2)
+        val adapter = ThreadTabAdapter(this.supportFragmentManager, 2,detailThread().threadId)
         detailThreadViewPager.adapter = adapter
         detailThreadViewPager.addOnPageChangeListener(
             TabLayout.TabLayoutOnPageChangeListener(
@@ -98,6 +100,7 @@ class DetailThreadActivity : AppCompatActivity() {
 }
 
 data class DetailThreadViewModel(
+    val threadId:Int?,
     val desc: String?,
     val communityName: String?,
     val username: String?,
