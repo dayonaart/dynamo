@@ -14,6 +14,8 @@ import id.kumparan.dynamo.pages.data.ThreadChatData
 import id.kumparan.dynamo.pages.rv.ThreadChatRVAdapter
 import id.kumparan.dynamo.utility.ModelInjector
 import kotlinx.android.synthetic.main.rv_comments_detail_thread.*
+import java.time.Instant
+import java.util.*
 
 class Comments(private val threadId: Int?) : Fragment() {
     private val allCommentFactory = ModelInjector.provideAllCommentListViewModelFactory()
@@ -32,7 +34,8 @@ class Comments(private val threadId: Int?) : Fragment() {
             val commentQuery = it.filter { data ->
                 data.threadId == threadId
             }
-            val threadAdapter = ThreadChatRVAdapter(commentQuery)
+            commentQuery.sortedByDescending { s->  Date.from(Instant.parse(s.createdAt))}
+            val threadAdapter = ThreadChatRVAdapter(requireContext(),commentQuery)
             rvThreadChat.apply {
                 layoutManager = LinearLayoutManager(context)
                 adapter = threadAdapter

@@ -2,8 +2,11 @@ package id.kumparan.dynamo.api
 
 import android.annotation.SuppressLint
 import android.util.Log
+import id.kumparan.dynamo.CommentToThreadPayload
+import id.kumparan.dynamo.CommentToThreadResponse
 import id.kumparan.dynamo.ReportThreadPayload
 import id.kumparan.dynamo.ReportThreadResponse
+import id.kumparan.dynamo.localstorage.LocalStorage
 import id.kumparan.dynamo.model.*
 import org.json.JSONObject
 import retrofit2.Call
@@ -190,6 +193,54 @@ class ApiUtility {
                     }
                 }
             })
+    }
+
+    fun addCommentToThread(payload:CommentToThreadPayload,message:(message:String)->Unit){
+        Api.instance().addCommentToThread(payload).enqueue(object :Callback<WrappedResponse<CommentToThreadResponse>>{
+            override fun onResponse(
+                call: Call<WrappedResponse<CommentToThreadResponse>>,
+                response: Response<WrappedResponse<CommentToThreadResponse>>
+            ) {
+               val res = response.body()
+                if (response.isSuccessful){
+                    message(res?.status!!)
+                }else{
+                    message(res?.status!!)
+                }
+            }
+
+            override fun onFailure(
+                call: Call<WrappedResponse<CommentToThreadResponse>>,
+                t: Throwable
+            ) {
+                message(t.message!!)
+
+            }
+
+        })
+    }
+
+    fun resendVerificationCode(userViewModel:UserViewModel,message: (message:String)->Unit){
+        Api.instance().resendEmailVerification(userViewModel.getData().value?.data?.email!!).enqueue(object :Callback<User>{
+            override fun onResponse(call: Call<User>, response: Response<User>) {
+                val res= response.body()
+                if (response.isSuccessful){
+                    if (res?.message=="Success"){
+                        userViewModel.updateData(res)
+                        message(res.message!!)
+                    }else{
+                        message(res?.message!!)
+                    }
+                }else{
+                    message(response.message())
+                }
+            }
+
+            override fun onFailure(call: Call<User>, t: Throwable) {
+                message(t.message!!)
+            }
+
+        })
     }
 }
 

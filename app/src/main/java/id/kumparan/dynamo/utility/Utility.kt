@@ -3,8 +3,14 @@ package id.kumparan.dynamo.utility
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
+import android.view.MenuItem
+import android.view.View
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
+import id.kumparan.dynamo.R
+import id.kumparan.dynamo.ReportThreadActivity
+import id.kumparan.dynamo.model.MyListThreadModel
 
 
 class Utility {
@@ -47,12 +53,33 @@ class Utility {
                 null
             )
         }
+
         fun pushReplace(context: Context, intent: Intent) {
             startActivity(
                 context,
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_TASK_ON_HOME),
                 null
             )
+        }
+
+        fun performOptionsMenu(context: Context, view: View, data: MyListThreadModel) {
+            val reportThreadActivity = Intent(context, ReportThreadActivity::class.java)
+            reportThreadActivity.putExtra("data", data)
+            val popupMenu =
+                PopupMenu(context, view)
+            popupMenu.inflate(R.menu.option_menu_thread)
+            popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
+                override fun onMenuItemClick(item: MenuItem?): Boolean {
+                    when (item?.itemId) {
+                        R.id.delete -> {
+                            context.startActivity(reportThreadActivity)
+                            return true
+                        }
+                    }
+                    return false
+                }
+            })
+            popupMenu.show()
         }
 
     }

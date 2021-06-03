@@ -13,10 +13,14 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import id.kumparan.dynamo.api.ApiUtility
 import id.kumparan.dynamo.model.MyListThreadModel
+import id.kumparan.dynamo.utility.afterTextChanged
 import kotlinx.android.synthetic.main.activity_report_thread.*
 import kotlinx.android.synthetic.main.dynamo_card_messagge.view.*
 import kotlinx.android.synthetic.main.report_thread_bottom_sheet.*
 import java.io.Serializable
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.util.*
 
 class ReportThreadActivity : AppCompatActivity() {
     private val loading = CustomLoading()
@@ -26,14 +30,25 @@ class ReportThreadActivity : AppCompatActivity() {
         tvCommunityName.text = data().communityName
         tvCommunityDesc.text = data().content
         tvUsername.text = data().username
-        tvCommunityDate.text = data().createdAt
+        tvCommunityDate.text = parseDate(data().createdAt)
+        initReportUi()
         popScreen.setOnClickListener {
             onBackPressed()
         }
         initRadioButton()
         initTextField()
         submitBtn.setOnClickListener {
-            initDialog()
+            initDialog(data().communityId!=null)
+        }
+    }
+
+    private fun initReportUi(){
+        if (data().communityId==null){
+            reportTitle.text = resources.getText(R.string.report_comment)
+            reportDesc.text = resources.getText(R.string.give_reason_comment)
+        }else{
+            reportTitle.text = resources.getText(R.string.report_thread)
+            reportDesc.text = resources.getText(R.string.give_reason_report)
         }
     }
 
@@ -46,6 +61,7 @@ class ReportThreadActivity : AppCompatActivity() {
         radioGroup.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { g, c ->
             val radio: RadioButton = findViewById(c)
             if (radio.text.equals("Lainnya")) {
+                submitBtn.isEnabled = false
                 otherField.visibility = View.VISIBLE
 
             } else {
@@ -58,34 +74,38 @@ class ReportThreadActivity : AppCompatActivity() {
     }
 
     private fun initTextField() {
-        otherField.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        otherField.afterTextChanged {
+            submitBtn.isEnabled = it.trim().isNotEmpty()
+        }
+    }
 
-            }
 
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                submitBtn.isEnabled = p0!!.isNotEmpty()
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-
-            }
-
-        })
+    @SuppressLint("SimpleDateFormat")
+    private fun parseDate(date: String?): String? {
+        val sdf = SimpleDateFormat("dd MMMM y")
+        return sdf.format(
+            Date.from(Instant.parse(date ?: "1990-11-30T18:35:24.00Z"))
+        )
     }
 
     @SuppressLint("InflateParams")
-    private fun initDialog() {
-        messageCardLayout.visibility = View.GONE
+    private fun initDialog(isThread:Boolean) {
         val btnSheet = layoutInflater.inflate(R.layout.report_thread_bottom_sheet, null)
         val dialog = BottomSheetDialog(this)
         val messCard = messageIncludeCard.findViewById<TextView>(R.id.messageCard)
         val popMessage = messageIncludeCard.findViewById<ImageView>(R.id.closeError)
+
         popMessage.setOnClickListener {
             messageCardLayout.visibility = View.GONE
         }
         dialog.setContentView(btnSheet)
+        if (!isThread){
+            dialog.reportTitleBS.text = resources.getText(R.string.report_comment)
+            dialog.reportDescBS.text = resources.getText(R.string.give_reason_comment)
+        }
+
         dialog.acceptBtn.setOnClickListener {
+            messageCardLayout.visibility = View.GONE
             loading.show(this, "Please Wait..")
             val payload =
                 ReportThreadPayload(data().id, data().userCreateId, otherField.text.toString())

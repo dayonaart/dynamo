@@ -86,6 +86,7 @@
         android:paddingBottom="20dp">
 
         <TextView
+            android:layout_marginEnd="10dp"
             android:id="@+id/tvMyCommunityDesc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

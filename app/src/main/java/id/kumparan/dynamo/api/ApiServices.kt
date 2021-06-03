@@ -20,6 +20,17 @@ interface ApiServices {
     fun login(@Body payload: LoginPayload): @JvmSuppressWildcards Call<User>
 
     @Headers("Content-Type: application/json")
+    @POST("${baseUrl}/user/register")
+    fun register(@Body registerPayload: RegisterPayload): @JvmSuppressWildcards Call<User>
+
+    @Headers("Content-Type: application/json")
+    @POST("${baseUrl}/user/update/{id}")
+    fun updateUser(
+        @Body payload: UpdateUserPayload,
+        @Path("id") userId: Int
+    ): @JvmSuppressWildcards Call<User>
+
+    @Headers("Content-Type: application/json")
     @POST("${baseUrl}/report/AddReportToThread")
     fun reportThread(@Body payload: ReportThreadPayload): @JvmSuppressWildcards Call<ReportThreadResponse>
 
@@ -30,6 +41,10 @@ interface ApiServices {
     @Headers("Content-Type: application/json")
     @POST("${baseUrl}/thread/add")
     fun addThread(@Body payload: AddThreadModelPayload): @JvmSuppressWildcards Call<WrappedListResponse<AddThreadResponseModel>>
+
+    @Headers("Content-Type: application/json")
+    @POST("${baseUrl}/comment/addCommentToThread")
+    fun addCommentToThread(@Body payload: CommentToThreadPayload): @JvmSuppressWildcards Call<WrappedResponse<CommentToThreadResponse>>
 
     @Headers("Content-Type: application/json")
     @GET("${baseUrl}/user")
@@ -77,25 +92,10 @@ interface ApiServices {
     ): @JvmSuppressWildcards Call<WrappedListResponse<ModeratorResponseModel>>
 
     @Headers("Content-Type: application/json")
-    @POST("${baseUrl}/user/register")
-    fun register(@Body registerPayload: RegisterPayload): @JvmSuppressWildcards Call<User>
-
-    @Headers("Content-Type: application/json")
-    @POST("${baseUrl}/user/update/{id}")
-    fun updateUser(
-        @Body payload: UpdateUserPayload,
-        @Path("id") userId: Int
+    @GET("${baseUrl}/user/resend-verification")
+    fun resendEmailVerification(
+       @Query("email") email:String
     ): @JvmSuppressWildcards Call<User>
-
-
-//
-//    @FormUrlEncoded
-//    @POST("api/register")
-//    fun register(
-//        @Field("name") name: String,
-//        @Field("email") email: String,
-//        @Field("password") password: String
-//    ): Call<WrappedResponse<UserData>>
 
 }
 

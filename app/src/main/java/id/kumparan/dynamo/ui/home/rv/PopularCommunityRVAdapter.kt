@@ -11,11 +11,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import id.kumparan.dynamo.R
-import id.kumparan.dynamo.model.CommunityListModel
 import id.kumparan.dynamo.model.ListThreadModel
-import id.kumparan.dynamo.model.MyCommunityModel
+import id.kumparan.dynamo.model.MyListThreadModel
 import id.kumparan.dynamo.pages.DetailThreadActivity
-import id.kumparan.dynamo.pages.DetailThreadViewModel
+import id.kumparan.dynamo.utility.Utility
 import kotlinx.android.synthetic.main.rv_thread_item.view.*
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -51,6 +50,7 @@ class PopularCommunityRVHolder(private val context: Context, view: View) :
     private val imgThumbnail = view.imgThumbnail
     private val comments = view.comments
     private val openChat = view.openDetailCommunity
+    private val optionBtn = view.optionBtn
 
     @SuppressLint("SetTextI18n")
     fun bindThread(listThreadModel: ListThreadModel) {
@@ -58,48 +58,29 @@ class PopularCommunityRVHolder(private val context: Context, view: View) :
         tvUsername.text = listThreadModel.username
         tvDate.text = dateNow(listThreadModel.createdAt)
         tvDesc.text = listThreadModel.content
-//        if ((listThreadModel.avatar != "" && listThreadModel.avatar != null) && !listThreadModel.avatar.contains(
-//                "data"
-//            )
-//        ) {
-//            imgUrl.setImageBitmap(convertBase64ToBitmap(listThreadModel.avatar))
-//            imgThumbnail.setImageBitmap(convertBase64ToBitmap(listThreadModel.avatar))
-//        }
-//        Picasso.get()
-//            .load(userListData.photo).placeholder(R.drawable.dynamo_profile)
-//            .into(imgUrl, object : Callback {
-//                override fun onSuccess() {
-//                    Log.d("PHOTO", "success")
-//                }
-//
-//                override fun onError(e: Exception?) {
-//                    imgUrl.setImageResource(R.drawable.dynamo_profile)
-//                }
-//            })
-//        Picasso.get().load(userListData.photo).placeholder(R.drawable.dynamo_profile)
-//            .into(imgThumbnail, object : Callback {
-//                override fun onSuccess() {
-//                    TODO("Not yet implemented")
-//                }
-//
-//                override fun onError(e: java.lang.Exception?) {
-//                    imgThumbnail.setImageResource(R.drawable.dynamo_profile)
-//                }
-//
-//            })
         comments.text = "${listThreadModel.noComments} Komentar"
+        val detailThreadView = MyListThreadModel(
+            listThreadModel.id,
+            listThreadModel.title,
+            listThreadModel.content,
+            listThreadModel.id,
+            listThreadModel.userCreateId,
+            listThreadModel.userUpdateId,
+            listThreadModel.createdAt,
+            listThreadModel.updatedAt,
+            listThreadModel.username,
+            listThreadModel.communityName,
+            listThreadModel.upVote,
+            listThreadModel.downVote,
+            listThreadModel.noComments,
+            listThreadModel.noReports,
+            listThreadModel.score,
+        )
         openChat.setOnClickListener {
-            val detailThreadView = DetailThreadViewModel(
-                listThreadModel.id,
-                listThreadModel.content,
-                listThreadModel.communityName,
-                listThreadModel.username,
-                listThreadModel.createdAt,
-                null,
-//                listThreadModel.avatar,
-                listThreadModel.noComments
-            )
-            openChat(context, detailThreadView, listThreadModel.id)
+            openChat(context, detailThreadView)
+        }
+        optionBtn.setOnClickListener {
+            Utility.performOptionsMenu(context, optionBtn, detailThreadView)
         }
 
     }
@@ -123,19 +104,16 @@ class PopularCommunityRVHolder(private val context: Context, view: View) :
 
     private fun openChat(
         context: Context,
-        detailThreadViewModel: DetailThreadViewModel,
-        communityId: Int?
+        myListThreadModel: MyListThreadModel,
     ) {
         val detailThread = Intent(context, DetailThreadActivity::class.java)
-        detailThread.putExtra("detailThread", detailThreadViewModel)
+        detailThread.putExtra("detailThread", myListThreadModel)
         context.startActivity(detailThread)
-//        val detailCommunity = Intent(context, DetailCommunityActivity::class.java)
-//        detailCommunity.putExtra("id",communityId)
-//        context.startActivity(detailCommunity)
     }
 
     private fun convertBase64ToBitmap(b64: String): Bitmap? {
         val imageAsBytes = Base64.decode(b64.toByteArray(), Base64.DEFAULT)
         return BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.size)
     }
+
 }

@@ -34,7 +34,7 @@ class Threads(private val communityListLiveData: LiveData<CommunityListModel?>):
         communityListLiveData.observe(viewLifecycleOwner,{
             listThreadModel().getData().observe(viewLifecycleOwner,{thread->
                 val threadQuery=thread.filter { f->f.communityId==it?.id }
-                val threadAdapter= DetailThreadChatRVAdapter(threadQuery)
+                val threadAdapter= DetailThreadChatRVAdapter(requireContext(), threadQuery)
                 if (threadQuery.isEmpty()){
                     haveNoThread.visibility=View.VISIBLE
                 }else{

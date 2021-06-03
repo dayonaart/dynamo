@@ -24,6 +24,7 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/reportTitleBS"
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -32,7 +33,7 @@
         android:textSize="20sp"/>
 
     <TextView
-        android:id="@+id/openGallery"
+        android:id="@+id/reportDescBS"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="@string/are_you_sure_report_thread"

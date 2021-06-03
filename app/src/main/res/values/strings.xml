@@ -49,6 +49,13 @@
     <string name="other">Lainnya</string>
     <string name="another_reason">Tulis alasan di sini...</string>
     <string name="give_reason_report">Berikan alasan kenapa kamu ingin melaporkan thread ini</string>
+    <string name="give_reason_comment">Berikan alasan kenapa kamu ingin melaporkan komentar ini</string>
     <string name="report_thread">Laporkan Thread</string>
     <string name="are_you_sure_report_thread">Apakah kamu yakin ingin melaporkan thread ini?</string>
+    <string name="are_you_sure_report_comment">Apakah kamu yakin ingin melaporkan komentar ini?</string>
+    <string name="write_comment_here">Tulis komentar di sini…</string>
+    <string name="give_comment">Beri komentar..</string>
+    <string name="report_comment">Laporkan Komentar</string>
+    <string name="wrong_code_verification">Kode verifikasi salah</string>
+    <string name="did_not_receive_verification_code">Belum dapat kode verifikasi?</string>
 </resources>

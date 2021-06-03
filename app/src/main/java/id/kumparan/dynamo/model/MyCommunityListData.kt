@@ -16,6 +16,7 @@ data class MyCommunityModel(
     @SerializedName("Community.name") val communityName: String?,
     @SerializedName("Community.categories") val myCommunityCategory: List<MyCommunityCategory>?,
     @SerializedName("User.photo") val userPhoto: String?,
+    @SerializedName("Community.avatar") val communityAvatar:String?
 ) : Serializable
 
 data class MyCommunityCategory(val id: Int?, val categoryName: String?) : Serializable

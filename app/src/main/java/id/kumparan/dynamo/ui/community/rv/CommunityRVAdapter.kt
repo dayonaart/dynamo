@@ -36,7 +36,7 @@ class CommunityRVAdapter(private val data: List<MyCommunityModel>) :
 
         @SuppressLint("SetTextI18n")
         fun bindCommunity(myCommunityModel: MyCommunityModel) {
-            communityName.text = myCommunityModel.communityName
+            communityName.text = "${myCommunityModel.communityName} Moderator : ${myCommunityModel.isModerator}"
             communityThread.text = "Thread not found · "
             communityMember.text = "Member not found"
             if ((myCommunityModel.userPhoto != "" && myCommunityModel.userPhoto != null) && !myCommunityModel.userPhoto.contains(
@@ -45,38 +45,12 @@ class CommunityRVAdapter(private val data: List<MyCommunityModel>) :
             ) {
                 communityImg.setImageBitmap(convertBase64ToBitmap(myCommunityModel.userPhoto))
             }
-//            Picasso.get().load(myCommunityModel.photo).placeholder(R.drawable.dynamo_profile).into(
-//                communityImg,
-//                object : Callback {
-//                    override fun onSuccess() {
-//                        TODO("Not yet implemented")
-//                    }
-//                    override fun onError(e: Exception?) {
-//                        communityImg.setImageResource(R.drawable.dynamo_profile)
-//                    }
-//
-//                })
+
             openDetailCommunity.setOnClickListener {
                 openDetailCommunity(context, myCommunityModel.communityId)
             }
         }
 
-        @SuppressLint("SimpleDateFormat")
-        private fun dateNow(date: String?): String? {
-            val sdf = SimpleDateFormat("dd MMMM y")
-            return sdf.format(
-                Date.from(between(Instant.parse(date ?: "1990-11-30T18:35:24.00Z"), Instant.now()))
-            )
-        }
-
-        private fun between(startInclusive: Instant, endExclusive: Instant): Instant? {
-            val startSeconds: Long = startInclusive.epochSecond
-            val endSeconds: Long = endExclusive.epochSecond
-            val random: Long = ThreadLocalRandom
-                .current()
-                .nextLong(startSeconds, endSeconds)
-            return Instant.ofEpochSecond(random)
-        }
 
         private fun convertBase64ToBitmap(b64: String): Bitmap? {
             val imageAsBytes = Base64.decode(b64.toByteArray(), Base64.DEFAULT)

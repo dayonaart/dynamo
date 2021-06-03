@@ -21,6 +21,7 @@ import id.kumparan.dynamo.model.MyListThreadModelViewModel
 import id.kumparan.dynamo.model.UserViewModel
 import id.kumparan.dynamo.utility.ModelInjector
 import id.kumparan.dynamo.utility.Utility
+import id.kumparan.dynamo.utility.afterTextChanged
 import kotlinx.android.synthetic.main.activity_create_thread.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -48,6 +49,7 @@ class CreateThreadActivity : AppCompatActivity() {
         })
         setSpinner()
         popScreen.setOnClickListener { onBackPressed() }
+        validationField()
         submitBtn.setOnClickListener {
             submit()
         }
@@ -55,6 +57,16 @@ class CreateThreadActivity : AppCompatActivity() {
 //        val text = SpannableString("Lorem ipsum dolor sit amet\n")
 //        text.setSpan(`is`, text.length - 2, text.length, 0)
 //        openGallery()
+    }
+
+    private fun validationField(){
+        etTitle.afterTextChanged {
+            submitBtn.isEnabled = it.isNotEmpty()&& etContent.text.toString().isNotEmpty()
+        }
+
+        etContent.afterTextChanged {
+            submitBtn.isEnabled = it.isNotEmpty()&& etTitle.text.toString().isNotEmpty()
+        }
     }
 
     private fun myCommunityViewModel(): MyCommunityModelViewModel {
@@ -86,55 +98,49 @@ class CreateThreadActivity : AppCompatActivity() {
 
     private fun submit() {
         val title = etTitle.text.toString()
-        val desc = etDesc.text.toString()
-        if (desc.isEmpty() || title.isEmpty()) {
-            Utility.customToast(applicationContext, "Please fill all required field")
-        } else {
-            loading.show(this, "Please Wait")
-            val indexSpinner = communitySpinner?.selectedItemPosition
-            val communityId =
-                myCommunityViewModel().getData().value?.get(indexSpinner!!)?.communityId
-            val payload =
-                AddThreadModelPayload(
-                    title,
-                    desc,
-                    communityId,
-                    userViewModel().getData().value?.data?.id
-                )
-            Api.instance().addThread(payload)
-                .enqueue(object : Callback<WrappedListResponse<AddThreadResponseModel>> {
-                    override fun onResponse(
-                        call: Call<WrappedListResponse<AddThreadResponseModel>>,
-                        response: Response<WrappedListResponse<AddThreadResponseModel>>
-                    ) {
-                        val res = response.body()
-                        if (response.isSuccessful) {
-                            ApiUtility().getMyThread(
-                                myThreadListViewModel(),
-                                userViewModel().getData().value?.data?.id!!
-                            )
-                            loading.hide()
-                            Utility.customToast(applicationContext, "${res?.message}")
-                            onBackPressed()
-                        } else {
-                            loading.hide()
-                            Utility.customToast(applicationContext, "${res?.message}")
-                        }
-                    }
-
-                    override fun onFailure(
-                        call: Call<WrappedListResponse<AddThreadResponseModel>>,
-                        t: Throwable
-                    ) {
+        val desc = etContent.text.toString()
+        loading.show(this, "Please Wait")
+        val indexSpinner = communitySpinner?.selectedItemPosition
+        val communityId =
+            myCommunityViewModel().getData().value?.get(indexSpinner!!)?.communityId
+        val payload =
+            AddThreadModelPayload(
+                title,
+                desc,
+                communityId,
+                userViewModel().getData().value?.data?.id
+            )
+        Api.instance().addThread(payload)
+            .enqueue(object : Callback<WrappedListResponse<AddThreadResponseModel>> {
+                override fun onResponse(
+                    call: Call<WrappedListResponse<AddThreadResponseModel>>,
+                    response: Response<WrappedListResponse<AddThreadResponseModel>>
+                ) {
+                    val res = response.body()
+                    if (response.isSuccessful) {
+                        ApiUtility().getMyThread(
+                            myThreadListViewModel(),
+                            userViewModel().getData().value?.data?.id!!
+                        )
                         loading.hide()
-                        Utility.customToast(applicationContext, "${t.message}")
-                        println("MESS ${t.message}")
-
-
+                        Utility.customToast(applicationContext, "${res?.message}")
+                        onBackPressed()
+                    } else {
+                        loading.hide()
+                        Utility.customToast(applicationContext, "${res?.message}")
                     }
+                }
 
-                })
-        }
+                override fun onFailure(
+                    call: Call<WrappedListResponse<AddThreadResponseModel>>,
+                    t: Throwable
+                ) {
+                    loading.hide()
+                    Utility.customToast(applicationContext, "${t.message}")
+                    println("MESS ${t.message}")
+                }
+
+            })
     }
 
     private fun openGallery() {

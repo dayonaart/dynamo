@@ -1,4 +1,5 @@
 package id.kumparan.dynamo
+
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +11,8 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.ViewModelProvider
+import com.google.gson.Gson
+import id.kumparan.dynamo.api.ApiUtility
 import id.kumparan.dynamo.localstorage.LocalStorage
 import id.kumparan.dynamo.model.UserViewModel
 import id.kumparan.dynamo.utility.ModelInjector
@@ -18,44 +21,61 @@ import kotlinx.android.synthetic.main.activity_activation_code.*
 
 
 class ActivationCodeActivity : AppCompatActivity() {
-    private val factory = ModelInjector.provideUserViewModelFactory()
+    private val userFactory = ModelInjector.provideUserViewModelFactory()
+    private val gson = Gson()
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_activation_code)
         countDownTimer().start()
         val createProfileActivity = Intent(this, CreateProfileActivity::class.java)
-        val readLocalStorage = LocalStorage.readLocalToModel(this)
         val editText =
             arrayOf<EditText>(et1, et2, et3, et4, et5, et6)
         val sentCodeText =
-            "Masukkan kode verikasi yang telah dikirim melalui email ke " + "<b>" + "${readLocalStorage?.data?.email}" + "</b> "
+            "Masukkan kode verikasi yang telah dikirim melalui email ke " + "<b>" + "${userModel().getData().value?.data?.email}" + "</b> "
         sentCode.text = HtmlCompat.fromHtml(sentCodeText, HtmlCompat.FROM_HTML_MODE_LEGACY)
         configureEditText(editText)
-        val codeValidation =
-            readLocalStorage?.verificationCode?.verification_code?.map { it.toString() }
-        submitBtn.setOnClickListener {
-            val inputCode=editText.map { it.text.toString() }
-            println("CODE VER $inputCode $codeValidation")
-            if (inputCode == codeValidation){
-                LocalStorage.saveData(this,"isVerify","true")
-                Utility.pushReplaceAll(this, createProfileActivity)
-            }else{
-                errorCardLayout.visibility= View.VISIBLE
+        userModel().getData().observe(this,{
+            val codeValidation= it.verificationCode?.verification_code?.map { c->c.toString() }
+            submitBtn.setOnClickListener {
+                val inputCode = editText.map { et-> et.text.toString() }
+                println("CODE VER $inputCode $codeValidation")
+                if (inputCode == codeValidation) {
+                    LocalStorage.saveData(this, "isVerify", "true")
+                    Utility.pushReplaceAll(this, createProfileActivity)
+                } else {
+                    errorTextCard.text=resources.getText(R.string.wrong_code_verification)
+                    errorCardLayout.visibility = View.VISIBLE
+                }
+            }
+        })
+        closeError.setOnClickListener {
+            errorCardLayout.visibility = View.GONE
+        }
+    }
+
+    private fun userModel(): UserViewModel {
+        return ViewModelProvider(this, userFactory).get(UserViewModel::class.java)
+    }
+
+    private fun resendCode() {
+        countDownText.setOnClickListener {
+            pbProgress.visibility=View.VISIBLE
+            ApiUtility().resendVerificationCode(userModel()){message ->
+                errorTextCard.text=message
+                errorCardLayout.visibility =View.VISIBLE
+                if (message=="Success"){
+                    LocalStorage.saveData(this, "user_session", gson.toJson(userModel().getData().value))
+                    pbProgress.visibility=View.GONE
+                    countDownTimer().start()
+                }else{
+                    pbProgress.visibility=View.GONE
+                }
             }
         }
-
-        closeError.setOnClickListener {
-            errorCardLayout.visibility= View.GONE
-        }
-    }
-    private fun userModel(): UserViewModel {
-        return ViewModelProvider(this, factory).get(UserViewModel::class.java)
     }
 
-    private fun resendCode(){
-        countDownTimer().start()
-    }
     private fun configureEditText(editText: Array<EditText>) {
         for (et in editText) {
             et.addTextChangedListener(object : TextWatcher {
@@ -96,17 +116,18 @@ class ActivationCodeActivity : AppCompatActivity() {
     }
 
     private fun countDownTimer(): CountDownTimer {
-        return object : CountDownTimer(59000, 1000){
+        return object : CountDownTimer(59000, 1000) {
+            @SuppressLint("SetTextI18n")
             override fun onTick(p0: Long) {
-                countDown.text="${(p0/1000)} detik"
-                countDown.setOnClickListener{
+                countDownText.text = "${(p0 / 1000)} detik"
+                countDownText.setOnClickListener {
                 }
             }
 
             override fun onFinish() {
-                countDown.text="Kirim Ulang"
-                countDown.setOnClickListener{
-                    countDownTimer().start()
+                countDownText.text = "Kirim Ulang"
+                countDownText.setOnClickListener {
+                    resendCode()
                 }
 
             }

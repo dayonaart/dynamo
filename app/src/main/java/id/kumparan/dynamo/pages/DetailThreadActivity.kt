@@ -1,19 +1,26 @@
 package id.kumparan.dynamo.pages
-
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import id.kumparan.dynamo.CreateCommentActivity
 import id.kumparan.dynamo.R
+import id.kumparan.dynamo.model.MyListThreadModel
 import id.kumparan.dynamo.pages.adapter.ThreadTabAdapter
+import id.kumparan.dynamo.utility.Utility
 import kotlinx.android.synthetic.main.activity_detail_thread.*
-import java.io.Serializable
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.util.*
 
 class DetailThreadActivity : AppCompatActivity() {
+    private val tabTitle = mutableListOf("Popular", "Terbaru")
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,68 +36,53 @@ class DetailThreadActivity : AppCompatActivity() {
         popScreen.setOnClickListener {
             onBackPressed()
         }
-        toolbar_title.text = "TOOLBAR TITLE"
+        toolbar_title.text = detailThread().title
         tvMyCommunityName.text = detailThread().username
         tvMyUsername.text = detailThread().username
-        tvMyCommunityTDesc.text = detailThread().desc
-        tvMyCommunityDate.text = detailThread().communityDate
-        comments.text = "${detailThread().commentCount}"
-        if ((detailThread().photo != "" && detailThread().photo != null) && !detailThread().photo?.contains(
-                "data"
-            )!!
-        ) {
-            imgThumbnail.setImageBitmap(convertBase64ToBitmap(detailThread().photo!!))
-        }
-//        Picasso.get().load(detailThread.photo).into(imgThumbnail,object :Callback{
-//            override fun onSuccess() {
-//                TODO("Not yet implemented")
-//            }
-//
-//            override fun onError(e: Exception?) {
-//                imgThumbnail.setImageResource(R.drawable.dynamo_profile)
-//            }
-//        })
-//        Picasso.get().load(detailThread.photo).into(imgMyCommunityUrl, object : Callback {
-//            override fun onSuccess() {
-//                TODO("Not yet implemented")
-//            }
-//
-//            override fun onError(e: Exception?) {
-//                imgMyCommunityUrl.setImageResource(R.drawable.dynamo_profile)
-//            }
-//
-//        })
+        tvMyCommunityTDesc.text = detailThread().content
+        tvMyCommunityDate.text = detailThread().createdAt
+        comments.text = "${detailThread().noComments}"
+        initTextField()
+//        if ((detailThread().photo != "" && detailThread().photo != null) && !detailThread().photo?.contains(
+//                "data"
+//            )!!
+//        ) {
+//            imgThumbnail.setImageBitmap(convertBase64ToBitmap(detailThread().photo!!))
+//        }
         settingTabs()
-//        val generateThread=(1..100).map {
-//            ThreadChatData(null,null,null)
-//        }
-//        val threadAdapter=ThreadChatRVAdapter(generateThread)
-//        rvThreadChat.apply {
-//            layoutManager=LinearLayoutManager(context)
-//            adapter=threadAdapter
-//        }
+        optionBtn.setOnClickListener {
+            Utility.performOptionsMenu(this,optionBtn,detailThread())
+        }
     }
-    private fun detailThread(): DetailThreadViewModel {
-        return  intent.extras?.get("detailThread") as DetailThreadViewModel
-    }
-    private fun settingTabs() {
-        val adapter = ThreadTabAdapter(this.supportFragmentManager, 2,detailThread().threadId)
-        detailThreadViewPager.adapter = adapter
-        detailThreadViewPager.addOnPageChangeListener(
-            TabLayout.TabLayoutOnPageChangeListener(
-                detailThreadTabs
-            )
-        )
-        detailThreadViewPager.offscreenPageLimit = 2
-        detailThreadTabs.setupWithViewPager(detailThreadViewPager)
-        detailThreadTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                detailThreadViewPager.currentItem = tab.position
-            }
 
-            override fun onTabUnselected(tab: TabLayout.Tab) {}
-            override fun onTabReselected(tab: TabLayout.Tab) {}
-        })
+    private fun initTextField(){
+        val createCommentActivity = Intent(this, CreateCommentActivity::class.java)
+        createCommentField.setOnClickListener {
+            createCommentActivity.putExtra("data",detailThread())
+            startActivity(createCommentActivity)
+        }
+    }
+
+
+
+    @SuppressLint("SimpleDateFormat")
+    private fun parseDate(date: String?): String? {
+        val sdf = SimpleDateFormat("dd MMMM y")
+        return sdf.format(
+            Date.from((Instant.parse(date ?: "1990-11-30T18:35:24.00Z")))
+        )
+    }
+
+    private fun detailThread(): MyListThreadModel {
+        return intent.extras?.get("detailThread") as MyListThreadModel
+    }
+
+    private fun settingTabs() {
+        val adapter = ThreadTabAdapter(this,detailThread().id)
+        detailThreadViewPager.adapter=adapter
+        TabLayoutMediator(detailThreadTabs, detailThreadViewPager) { tab, pos ->
+            tab.text = tabTitle[pos]
+        }.attach()
     }
 
     private fun convertBase64ToBitmap(b64: String): Bitmap? {
@@ -99,12 +91,3 @@ class DetailThreadActivity : AppCompatActivity() {
     }
 }
 
-data class DetailThreadViewModel(
-    val threadId:Int?,
-    val desc: String?,
-    val communityName: String?,
-    val username: String?,
-    val communityDate: String?,
-    val photo: String?,
-    val commentCount: Int?
-) : Serializable

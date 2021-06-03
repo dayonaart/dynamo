@@ -5,14 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingHorizontal="10dp"
     tools:context=".pages.DetailThreadActivity">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/chatField"
+        app:layout_constraintBottom_toTopOf="@id/createCommentField"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.AppBarLayout
@@ -26,23 +25,22 @@
                 android:layout_height="wrap_content"
                 android:fitsSystemWindows="true"
                 app:contentScrim="@color/white"
-                app:expandedTitleMarginEnd="64dp"
-                app:expandedTitleMarginStart="48dp"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <RelativeLayout
+                    android:paddingVertical="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <androidx.appcompat.widget.Toolbar
+                        android:layout_marginEnd="10dp"
                         android:id="@+id/toolbar_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingHorizontal="5dp"
                         app:layout_collapseMode="pin"
                         app:layout_scrollFlags="scroll|enterAlways">
 
-                        <LinearLayout
+                        <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
@@ -54,31 +52,28 @@
                                 android:layout_height="wrap_content"
                                 android:src="@drawable/ic_x" />
 
-                            <Space
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1" />
 
                             <TextView
+                                android:gravity="center"
+                                android:layout_toStartOf="@id/optionBtn"
+                                android:layout_toEndOf="@id/popScreen"
                                 android:id="@+id/toolbar_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="TITLE"
                                 android:textStyle="bold" />
 
-                            <Space
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1" />
-
                             <ImageView
+                                android:layout_alignParentEnd="true"
+                                android:id="@+id/optionBtn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:src="@drawable/ic_option_3_dot" />
-                        </LinearLayout>
+                        </RelativeLayout>
                     </androidx.appcompat.widget.Toolbar>
 
                     <LinearLayout
+                        android:paddingHorizontal="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/toolbar_container"
@@ -96,7 +91,7 @@
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:scaleType="centerCrop"
-                                android:src="@drawable/ic_profile" />
+                                android:src="@drawable/dynamo_profile" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -171,7 +166,7 @@
                                 android:layout_height="80dp"
                                 android:layout_alignParentEnd="true"
                                 android:scaleType="centerCrop"
-                                android:src="@drawable/ic_profile" />
+                                android:src="@drawable/dynamo_profile" />
                         </RelativeLayout>
 
                         <LinearLayout
@@ -232,13 +227,22 @@
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
             <com.google.android.material.tabs.TabLayout
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:paddingBottom="10dp"
+                android:layout_marginEnd="100dp"
+                app:tabSelectedTextColor="@color/kumparan_purple51"
+                app:tabBackground="@drawable/tab_background"
+                app:tabIndicator="@null"
                 android:id="@+id/detailThreadTabs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.viewpager.widget.ViewPager
+        <androidx.viewpager2.widget.ViewPager2
+           android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:id="@+id/detailThreadViewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -247,15 +251,16 @@
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.google.android.material.textfield.MaterialAutoCompleteTextView
-        android:id="@+id/chatField"
+        android:layout_marginHorizontal="10dp"
+        android:id="@+id/createCommentField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:background="@drawable/field_shape"
         android:backgroundTint="@color/kumparan_gray20"
-        android:drawableEnd="@drawable/ic_mini_chat"
-        android:drawableTint="@color/kumparan_purple51"
-        android:hint="Beri komentar.."
+        android:clickable="true"
+        android:drawableEnd="@drawable/ic_mini_chat_purple"
+        android:hint="@string/give_comment"
+        android:inputType="none"
         android:paddingVertical="10dp"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"

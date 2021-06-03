@@ -15,6 +15,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import id.kumparan.dynamo.R
 import id.kumparan.dynamo.model.CommunityListModel
 import id.kumparan.dynamo.model.CommunityListModelViewModel
+import id.kumparan.dynamo.model.MyCommunityModel
 import id.kumparan.dynamo.model.UserViewModel
 import id.kumparan.dynamo.pages.adapter.DetailCommunityViewPager
 import id.kumparan.dynamo.utility.ModelInjector
@@ -37,7 +38,6 @@ class DetailCommunityActivity : AppCompatActivity() {
             onBackPressed()
         }
         joinBtnOrExit.setOnClickListener {
-
         }
 
     }

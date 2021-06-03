@@ -21,6 +21,7 @@
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.cardview.widget.CardView
+        android:layout_marginHorizontal="10dp"
         app:layout_constraintTop_toBottomOf="@id/navBar"
         android:id="@+id/errorCardLayout"
         android:layout_width="match_parent"
@@ -36,7 +37,7 @@
             android:paddingVertical="10dp">
 
             <TextView
-                android:text="Kode verifikasi salah"
+                android:text="@string/wrong_code_verification"
                 android:id="@+id/errorTextCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -170,7 +171,13 @@
             android:text="Verifikasi"
             android:textColor="@color/white" />
     </LinearLayout>
-
+    <ProgressBar
+        android:id="@+id/pbProgress"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/navBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"/>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -184,12 +191,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Belum dapat kode verifikasi? " />
+            android:text="@string/did_not_receive_verification_code" />
 
     <TextView
-        android:textColor="@color/kumparan_green55"
-        android:id="@+id/countDown"
+        android:paddingHorizontal="5dp"
         android:text="12:12"
+        android:textColor="@color/kumparan_green55"
+        android:id="@+id/countDownText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     </LinearLayout>

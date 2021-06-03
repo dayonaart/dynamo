@@ -45,14 +45,13 @@ class LocalStorage {
                false
            }
        }
-        fun deleteData(context: Context,fileName:String):Boolean{
+        fun deleteSaveData(context: Context,fileName:String):Boolean{
             val fileName:String = fileName
+            val data:String? = null
             val fileOutputStream: FileOutputStream
             return try {
                 fileOutputStream = context.openFileOutput(fileName, Context.MODE_PRIVATE)
-                val f =File(System.getProperty("user.dir"),fileName)
-                fileOutputStream.close()
-                f.delete()
+                fileOutputStream.write(data?.toByteArray())
                 true
             }catch (e: Exception){
                 e.printStackTrace()

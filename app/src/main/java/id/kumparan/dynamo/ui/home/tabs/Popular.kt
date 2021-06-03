@@ -1,8 +1,5 @@
 package id.kumparan.dynamo.ui.home.tabs
-
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,18 +8,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import id.kumparan.dynamo.R
-import id.kumparan.dynamo.api.Api
 import id.kumparan.dynamo.api.ApiUtility
-import id.kumparan.dynamo.api.WrappedListResponse
-import id.kumparan.dynamo.model.*
+import id.kumparan.dynamo.model.ListThreadModelViewModel
+import id.kumparan.dynamo.model.UserModel
+import id.kumparan.dynamo.model.UserViewModel
 import id.kumparan.dynamo.ui.home.rv.PopularCommunityRVAdapter
 import id.kumparan.dynamo.utility.ModelInjector
 import kotlinx.android.synthetic.main.fragment_community_tab_popular.rvPopular
 import kotlinx.android.synthetic.main.fragment_home_tab_popular.*
-import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class Popular : Fragment() {
     private val factory = ModelInjector.provideListThreadViewModelFactory()
@@ -39,13 +32,14 @@ class Popular : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         listThreadModel().getData().observe(viewLifecycleOwner, Observer {
-            val communityAdapter = PopularCommunityRVAdapter(it)
-            rvPopular.apply {
-                layoutManager = LinearLayoutManager(context)
-                adapter = communityAdapter
-            }
             when {
                 it.isNotEmpty() -> {
+                    val popularQuery=it.sortedByDescending { s->s.noComments }
+                    val communityAdapter = PopularCommunityRVAdapter(popularQuery)
+                    rvPopular.apply {
+                        layoutManager = LinearLayoutManager(context)
+                        adapter = communityAdapter
+                    }
                     pbProgress.visibility = View.GONE
                     haveNoThread.visibility = View.GONE
                 }

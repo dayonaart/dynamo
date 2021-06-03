@@ -59,15 +59,19 @@
     </ScrollView>
 
     <ProgressBar
-        android:visibility="visible"
+        android:visibility="gone"
         android:id="@+id/pbProgress"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvHomeMyCommunity"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical" />
+        android:layout_height="wrap_content">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvHomeMyCommunity"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </FrameLayout>

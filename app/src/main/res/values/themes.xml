@@ -100,6 +100,7 @@
     </style>
     <style name="MaterialButtonStyle2" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="backgroundTint">@color/button_disabled</item>
+        <item name="cornerRadius">30dp</item>
         <item name="android:gravity">center</item>
         <item name="android:paddingTop">3dp</item>
         <item name="android:paddingBottom">3dp</item>

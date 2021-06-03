@@ -7,13 +7,17 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import id.kumparan.dynamo.R
+import id.kumparan.dynamo.ReportThreadActivity
 import id.kumparan.dynamo.model.MyListThreadModel
 import id.kumparan.dynamo.pages.DetailThreadActivity
-import id.kumparan.dynamo.pages.DetailThreadViewModel
+import id.kumparan.dynamo.utility.Utility
+import kotlinx.android.synthetic.main.fragment_home_tab_my_community.*
 import kotlinx.android.synthetic.main.rv_thread_item.view.*
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -23,12 +27,9 @@ import java.util.concurrent.ThreadLocalRandom
 
 class MyCommunityRVAdapter(
     private val data: List<MyListThreadModel>,
-    private var optionsMenuClickListener: OptionsMenuClickListener
 ) :
     RecyclerView.Adapter<MyCommunityRVHolder>() {
-    interface OptionsMenuClickListener {
-        fun onOptionsMenuClicked(position: Int)
-    }
+
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, p1: Int): MyCommunityRVHolder {
         return MyCommunityRVHolder(
@@ -41,7 +42,7 @@ class MyCommunityRVAdapter(
     override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: MyCommunityRVHolder, position: Int) {
-        holder.bindThread(data[position],optionsMenuClickListener)
+        holder.bindThread(data[position])
     }
 }
 
@@ -60,87 +61,36 @@ class MyCommunityRVHolder(private val context: Context, view: View) :
     @SuppressLint("SetTextI18n")
     fun bindThread(
         myListThreadModel: MyListThreadModel,
-        optionsMenuClickListener: MyCommunityRVAdapter.OptionsMenuClickListener
     ) {
         tvName.text = myListThreadModel.communityName
         tvUsername.text = myListThreadModel.username
-        tvDate.text = dateNow(myListThreadModel.createdAt)
+        tvDate.text = parseDate(myListThreadModel.createdAt)
         tvDesc.text = myListThreadModel.content
-
-//        if ((myListThreadModel.userPhoto != "" && myListThreadModel.userPhoto != null) && !myListThreadModel.userPhoto.contains(
-//                "data"
-//            )
-//        ) {
-//            imgUrl.setImageBitmap(convertBase64ToBitmap(myListThreadModel.userPhoto))
-//            imgThumbnail.setImageBitmap(convertBase64ToBitmap(myListThreadModel.userPhoto))
-//        }
-//        Picasso.get()
-//            .load(userListData.photo).placeholder(R.drawable.dynamo_profile)
-//            .into(imgUrl, object : Callback {
-//                override fun onSuccess() {
-//                    Log.d("PHOTO", "success")
-//                }
-//
-//                override fun onError(e: Exception?) {
-//                    imgUrl.setImageResource(R.drawable.dynamo_profile)
-//                }
-//            })
-//        Picasso.get().load(userListData.photo).placeholder(R.drawable.dynamo_profile)
-//            .into(imgThumbnail, object : Callback {
-//                override fun onSuccess() {
-//                    TODO("Not yet implemented")
-//                }
-//
-//                override fun onError(e: java.lang.Exception?) {
-//                    imgThumbnail.setImageResource(R.drawable.dynamo_profile)
-//                }
-//
-//            })
-
         comments.text = "${myListThreadModel.noComments} komentar"
         openChat.setOnClickListener {
-            val detailThreadView = DetailThreadViewModel(
-                myListThreadModel.id,
-                myListThreadModel.content,
-                myListThreadModel.communityName,
-                myListThreadModel.username,
-                myListThreadModel.createdAt,
-                null,
-//                myListThreadModel.userPhoto,
-                myListThreadModel.noComments
-
-            )
-            openChat(context, detailThreadView)
+            openChat(context, myListThreadModel)
         }
 
         optionBtn.setOnClickListener {
-            optionsMenuClickListener.onOptionsMenuClicked(position)
+        Utility.performOptionsMenu(context,optionBtn,myListThreadModel)
         }
     }
 
     @SuppressLint("SimpleDateFormat")
-    private fun dateNow(date: String?): String? {
+    private fun parseDate(date: String?): String? {
         val sdf = SimpleDateFormat("dd MMMM y")
         return sdf.format(
-            Date.from(between(Instant.parse(date ?: "1990-11-30T18:35:24.00Z"), Instant.now()))
+            Date.from(Instant.parse(date ?: "1990-11-30T18:35:24.00Z"))
         )
     }
 
-    private fun between(startInclusive: Instant, endExclusive: Instant): Instant? {
-        val startSeconds: Long = startInclusive.epochSecond
-        val endSeconds: Long = endExclusive.epochSecond
-        val random: Long = ThreadLocalRandom
-            .current()
-            .nextLong(startSeconds, endSeconds)
-        return Instant.ofEpochSecond(random)
-    }
 
     private fun openChat(
         context: Context,
-        detailThreadViewModel: DetailThreadViewModel?,
+        myListThreadModel: MyListThreadModel?,
     ) {
         val detailThread = Intent(context, DetailThreadActivity::class.java)
-        detailThread.putExtra("detailThread", detailThreadViewModel)
+        detailThread.putExtra("detailThread", myListThreadModel)
         context.startActivity(detailThread)
     }
 
@@ -149,3 +99,4 @@ class MyCommunityRVHolder(private val context: Context, view: View) :
         return BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.size)
     }
 }
+

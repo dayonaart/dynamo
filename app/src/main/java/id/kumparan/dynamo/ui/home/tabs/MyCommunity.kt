@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.core.view.get
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -38,27 +39,24 @@ class MyCommunity : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val localUser = LocalStorage.readLocalToModel(requireContext())
-        if (localUser?.data?.email == null) {
+        if (userModel()?.email == null) {
             val registerActivity = Intent(requireContext(), RegisterActivity::class.java)
             signUpBtn.setOnClickListener {
                 startActivity(registerActivity)
             }
             errorLayout.visibility = View.VISIBLE
+            refreshContainer.visibility=View.GONE
         } else {
+            initRefresh()
+            refreshContainer.visibility=View.VISIBLE
             signUpBtn.visibility = View.GONE
             myThreadModel().getData().observe(viewLifecycleOwner, Observer {
+                errorLayout.visibility = View.VISIBLE
                 val data = it.sortedByDescending { d ->
                     d.createdAt
                 }
                 val communityAdapter =
-                    MyCommunityRVAdapter(data,
-                        object : MyCommunityRVAdapter.OptionsMenuClickListener {
-                            override fun onOptionsMenuClicked(position: Int) {
-                                performOptionsMenuClick(position, data)
-                            }
-
-                        })
+                    MyCommunityRVAdapter(data)
                 rvHomeMyCommunity.apply {
                     layoutManager = LinearLayoutManager(context)
                     adapter = communityAdapter
@@ -67,18 +65,25 @@ class MyCommunity : Fragment() {
                     errorLayout.visibility = View.GONE
                     pbProgress.visibility = View.GONE
                 } else {
-//                    GlobalScope.launch{
-//                        delay(10000L)
-                    pbProgress.visibility = View.VISIBLE
                     ApiUtility().getMyThread(
                         myThreadModel(), userModel()?.id
                         !!
                     )
                     ApiUtility().getAllComment(allCommentListModel())
-//                    }
                     pbProgress.visibility = View.GONE
                 }
             })
+        }
+    }
+
+    private fun initRefresh(){
+        refreshContainer.setOnRefreshListener {
+            ApiUtility().getMyThread(
+                myThreadModel(), userModel()?.id
+                !!
+            )
+            ApiUtility().getAllComment(allCommentListModel())
+            refreshContainer.isRefreshing=false
         }
     }
 
@@ -101,32 +106,5 @@ class MyCommunity : Fragment() {
             myListThreadFactory
         ).get(MyListThreadModelViewModel::class.java)
     }
-
-    private fun performOptionsMenuClick(position: Int, data: List<MyListThreadModel>) {
-        val reportThreadActivity = Intent(requireContext(), ReportThreadActivity::class.java)
-        reportThreadActivity.putExtra("data", data[position])
-        val popupMenu =
-            PopupMenu(requireContext(), rvHomeMyCommunity[position].findViewById(R.id.optionBtn))
-        popupMenu.inflate(R.menu.option_menu_thread)
-        popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
-            override fun onMenuItemClick(item: MenuItem?): Boolean {
-                when (item?.itemId) {
-                    R.id.delete -> {
-                        startActivity(reportThreadActivity)
-                        return true
-                    }
-                }
-                return false
-            }
-        })
-        popupMenu.show()
-    }
-
-    // on destroy of view make the binding reference to null
-    override fun onDestroy() {
-        super.onDestroy()
-//        _binding = null
-    }
-
 }
 

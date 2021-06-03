@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Dynamo"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ReportThreadActivity"/>
+        <activity android:name=".CreateCommentActivity"></activity>
+        <activity android:name=".ReportThreadActivity" />
         <activity android:name=".pages.DetailCommunityActivity" />
         <activity android:name=".pages.CreateThreadActivity" />
         <activity android:name=".ActivationCodeActivity" />

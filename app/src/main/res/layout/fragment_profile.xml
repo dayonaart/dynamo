@@ -19,6 +19,7 @@
            android:text="This is profile Fragment" />
 
        <com.google.android.material.button.MaterialButton
+           android:id="@+id/logoutBtn"
            android:layout_below="@id/tv_profile"
            android:gravity="center"
            style="@style/ButtonTheme"

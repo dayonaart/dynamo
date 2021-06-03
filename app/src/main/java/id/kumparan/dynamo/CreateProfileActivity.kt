@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Base64
 import android.view.View
@@ -41,7 +42,8 @@ class CreateProfileActivity : AppCompatActivity() {
     private val factory = ModelInjector.provideUserViewModelFactory()
     private val API = Api.instance()
     private val gson = Gson()
-    private val REQUEST_CODE = 10
+    private val REQUEST_CODE_OPEN_FILE = 10
+    private val REQUEST_CODE_OPEN_CAMERA = 11
     private val READ_EXTERNAL_STORAGE = "android.permission.READ_EXTERNAL_STORAGE"
     private val loading = CustomLoading()
     private var bitMap:String?=null
@@ -55,7 +57,7 @@ class CreateProfileActivity : AppCompatActivity() {
         }
         usernameField.setText(randomName())
         initField()
-        openFile()
+        initPermission()
         saveBtn.setOnClickListener {
             submit(this, userViewModel)
         }
@@ -149,7 +151,7 @@ class CreateProfileActivity : AppCompatActivity() {
     }
 
     @SuppressLint("InflateParams")
-    private fun openFile() {
+    private fun initPermission() {
         val btnSheet = layoutInflater.inflate(R.layout.bottom_sheet_dialog, null)
         val btnSheetPermission = layoutInflater.inflate(R.layout.bottom_sheet_permission, null)
         val dialog = BottomSheetDialog(this)
@@ -161,6 +163,7 @@ class CreateProfileActivity : AppCompatActivity() {
                 openPermission(dialogPermission, btnSheetPermission)
             } else {
                 openGallery(dialog, btnSheet)
+                openDeviceCamera(dialog,btnSheet)
             }
         }
         dialog.cancelBottomSheet.setOnClickListener {
@@ -176,12 +179,23 @@ class CreateProfileActivity : AppCompatActivity() {
         dialog.openGallery.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = "image/*"
-            startActivityForResult(intent, REQUEST_CODE)
+            startActivityForResult(intent, REQUEST_CODE_OPEN_FILE)
         }
         btnSheet.setOnClickListener {
             dialog.dismiss()
         }
 
+    }
+
+    private fun openDeviceCamera(dialog: BottomSheetDialog, btnSheet: View){
+        dialog.show()
+        dialog.openCamera.setOnClickListener {
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            startActivityForResult(intent, REQUEST_CODE_OPEN_CAMERA)
+        }
+        btnSheet.setOnClickListener {
+            dialog.dismiss()
+        }
     }
 
     private fun openPermission(dialogPermission: BottomSheetDialog, btnSheetPermission: View) {
@@ -203,7 +217,7 @@ class CreateProfileActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE) {
+        if (resultCode == Activity.RESULT_OK && (requestCode == REQUEST_CODE_OPEN_FILE||requestCode == REQUEST_CODE_OPEN_CAMERA)) {
             openFile.setBackgroundResource(0)
             openFile.setImageURI(data?.data)
             val bitmap = (openFile.drawable as BitmapDrawable).bitmap
@@ -222,7 +236,7 @@ class CreateProfileActivity : AppCompatActivity() {
     private fun permissionResult() {
         ActivityCompat.requestPermissions(
             this,
-            arrayOf(READ_EXTERNAL_STORAGE), REQUEST_CODE
+            arrayOf(READ_EXTERNAL_STORAGE), REQUEST_CODE_OPEN_FILE
         )
     }
 

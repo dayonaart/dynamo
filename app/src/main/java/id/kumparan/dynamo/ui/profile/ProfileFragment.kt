@@ -1,15 +1,18 @@
 package id.kumparan.dynamo.ui.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import id.kumparan.dynamo.LoginActivity
 import id.kumparan.dynamo.R
 import id.kumparan.dynamo.localstorage.LocalStorage
 import id.kumparan.dynamo.model.UserViewModel
 import id.kumparan.dynamo.utility.ModelInjector
+import id.kumparan.dynamo.utility.Utility
 import kotlinx.android.synthetic.main.fragment_profile.*
 
 class ProfileFragment : Fragment() {
@@ -32,6 +35,10 @@ class ProfileFragment : Fragment() {
                 tv_profile.text = it.toString()
             }
         })
-        LocalStorage.saveData(requireContext(),"activation_code","0")
+        val loginActivity=Intent(requireContext(),LoginActivity::class.java)
+        logoutBtn.setOnClickListener {
+            LocalStorage.deleteSaveData(requireContext(),"user_session")
+            Utility.pushReplaceAll(requireContext(),loginActivity)
+        }
     }
 }
