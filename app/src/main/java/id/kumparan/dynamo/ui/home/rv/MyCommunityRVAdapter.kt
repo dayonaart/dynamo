@@ -7,26 +7,24 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import id.kumparan.dynamo.R
-import id.kumparan.dynamo.ReportThreadActivity
 import id.kumparan.dynamo.model.MyListThreadModel
 import id.kumparan.dynamo.pages.DetailThreadActivity
+import id.kumparan.dynamo.utility.ModelInjector
 import id.kumparan.dynamo.utility.Utility
-import kotlinx.android.synthetic.main.fragment_home_tab_my_community.*
 import kotlinx.android.synthetic.main.rv_thread_item.view.*
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.*
-import java.util.concurrent.ThreadLocalRandom
 
 
 class MyCommunityRVAdapter(
     private val data: List<MyListThreadModel>,
+    private val userId:Int,
+    private val upVoteClickListener:(myListThreadModel: MyListThreadModel)->Unit,
 ) :
     RecyclerView.Adapter<MyCommunityRVHolder>() {
 
@@ -42,12 +40,13 @@ class MyCommunityRVAdapter(
     override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: MyCommunityRVHolder, position: Int) {
-        holder.bindThread(data[position])
+        holder.bindThread(data[position],userId,upVoteClickListener)
     }
 }
 
 class MyCommunityRVHolder(private val context: Context, view: View) :
     RecyclerView.ViewHolder(view) {
+    private val userFactory = ModelInjector.provideUserViewModelFactory()
     private val tvName = view.tvMyCommunityName
     private val tvUsername = view.tvMyUsername
     private val tvDate = view.tvMyCommunityDate
@@ -57,16 +56,19 @@ class MyCommunityRVHolder(private val context: Context, view: View) :
     private val comments = view.comments
     private val openChat = view.openDetailCommunity
     private val optionBtn = view.optionBtn
-
+    private val totalVote= view.totalVote
+    private val upVoteBtn=view.voteUpBtn
+    private val downVoteBtn=view.voteDownBtn
     @SuppressLint("SetTextI18n")
     fun bindThread(
-        myListThreadModel: MyListThreadModel,
+        myListThreadModel: MyListThreadModel,userId:Int,upVoteClickListener:(myListThreadModel: MyListThreadModel)->Unit,
     ) {
         tvName.text = myListThreadModel.communityName
         tvUsername.text = myListThreadModel.username
         tvDate.text = parseDate(myListThreadModel.createdAt)
         tvDesc.text = myListThreadModel.content
         comments.text = "${myListThreadModel.noComments} komentar"
+        totalVote.text = "${myListThreadModel.voteUserList?.size}"
         openChat.setOnClickListener {
             openChat(context, myListThreadModel)
         }
@@ -74,6 +76,17 @@ class MyCommunityRVHolder(private val context: Context, view: View) :
         optionBtn.setOnClickListener {
         Utility.performOptionsMenu(context,optionBtn,myListThreadModel)
         }
+        val isVoted=myListThreadModel.voteUserList?.find { it.userCreateId==userId }
+        if (isVoted!=null){
+            upVoteBtn.setImageResource(R.drawable.ic_green_vote_arrow_up)
+        }else{
+            upVoteBtn.rotation= 180F
+            upVoteBtn.setImageResource(R.drawable.ic_arrow)
+        }
+        upVoteBtn.setOnClickListener {
+            upVoteClickListener(myListThreadModel)
+        }
+        downVoteBtn.setOnClickListener {  }
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -98,5 +111,6 @@ class MyCommunityRVHolder(private val context: Context, view: View) :
         val imageAsBytes = Base64.decode(b64.toByteArray(), Base64.DEFAULT)
         return BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.size)
     }
+
 }
 

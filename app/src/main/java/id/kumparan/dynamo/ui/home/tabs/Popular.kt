@@ -1,4 +1,5 @@
 package id.kumparan.dynamo.ui.home.tabs
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,8 +19,12 @@ import kotlinx.android.synthetic.main.fragment_community_tab_popular.rvPopular
 import kotlinx.android.synthetic.main.fragment_home_tab_popular.*
 
 class Popular : Fragment() {
-    private val factory = ModelInjector.provideListThreadViewModelFactory()
+    private val allThreadFactory = ModelInjector.provideListThreadViewModelFactory()
     private val userFactory = ModelInjector.provideUserViewModelFactory()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -28,9 +33,12 @@ class Popular : Fragment() {
         return inflater.inflate(R.layout.fragment_home_tab_popular, container, false)
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         listThreadModel().getData().observe(viewLifecycleOwner, Observer {
             when {
                 it.isNotEmpty() -> {
@@ -55,7 +63,7 @@ class Popular : Fragment() {
     }
 
     private fun listThreadModel(): ListThreadModelViewModel {
-        return ViewModelProvider(this, factory).get(ListThreadModelViewModel::class.java)
+        return ViewModelProvider(this, allThreadFactory).get(ListThreadModelViewModel::class.java)
     }
 
     private fun getData() {

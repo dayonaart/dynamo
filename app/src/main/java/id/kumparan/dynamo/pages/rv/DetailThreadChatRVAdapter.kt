@@ -60,6 +60,7 @@ class DetailThreadChatRVAdapter(private val context: Context, private val data: 
                 listThreadModel.noComments,
                 listThreadModel.noReports,
                 listThreadModel.score,
+                null
             )
             optionBtn.setOnClickListener {
                 Utility.performOptionsMenu(context,optionBtn,detailThreadView)

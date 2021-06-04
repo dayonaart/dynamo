@@ -39,12 +39,14 @@ class CreateThreadActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_thread)
-        myCommunityViewModel().getData().observe(this, {
+        myCommunityViewModel().getData().observe(this, { it ->
             if (it.isEmpty()) {
                 ApiUtility().getMyCommunity(
                     myCommunityViewModel(),
                     userViewModel().getData().value?.data?.id!!
-                )
+                ){message->
+                    Utility.customToast(this,message)
+                }
             }
         })
         setSpinner()

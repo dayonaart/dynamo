@@ -110,21 +110,22 @@
         android:paddingBottom="20dp">
 
         <ImageView
+            android:id="@+id/voteDownBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_arrow" />
 
         <TextView
+            android:id="@+id/totalVote"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingHorizontal="10dp"
-            android:text="Vote"
             android:textColor="@color/grey" />
 
         <ImageView
+            android:id="@+id/voteUpBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:rotation="180"
             android:src="@drawable/ic_arrow" />
 
         <Space

@@ -75,6 +75,7 @@ class PopularCommunityRVHolder(private val context: Context, view: View) :
             listThreadModel.noComments,
             listThreadModel.noReports,
             listThreadModel.score,
+            null
         )
         openChat.setOnClickListener {
             openChat(context, detailThreadView)

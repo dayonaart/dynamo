@@ -23,9 +23,11 @@ data class MyListThreadModel(
     val downVote: Int?,
     val noComments: Int?,
     val noReports: Int?,
-    val score: Int?
+    val score: Int?,
+    val voteUserList:List<UserVoteId>?
 ) : Serializable
 
+    class UserVoteId(val userCreateId:Int?):Serializable
 class MyListThreadModelFactory(private val myListThreadModelRepository: MyListThreadModelRepository) :
     ViewModelProvider.NewInstanceFactory() {
 

@@ -18,6 +18,7 @@ import id.kumparan.dynamo.model.UserModel
 import id.kumparan.dynamo.model.UserViewModel
 import id.kumparan.dynamo.ui.community.rv.CommunityRVAdapter
 import id.kumparan.dynamo.utility.ModelInjector
+import id.kumparan.dynamo.utility.Utility
 import kotlinx.android.synthetic.main.fragment_community_tab_my_community.*
 import kotlinx.android.synthetic.main.fragment_home_tab_my_community.pbProgress
 
@@ -67,21 +68,21 @@ class MyCommunity : Fragment() {
 
     private fun initUI() {
         myCommunityModel().getData().observe(viewLifecycleOwner, Observer { its ->
-            val communityAdapter = CommunityRVAdapter(its)
-            rvCommunityMyCommunity.apply {
-                layoutManager = LinearLayoutManager(context)
-                adapter = communityAdapter
-            }
             when {
                 its.isNotEmpty() -> {
                     pbProgress.visibility = View.GONE
                     notRegisterLayout.visibility = View.GONE
+                    val communityAdapter = CommunityRVAdapter(its)
+                    rvCommunityMyCommunity.apply {
+                        layoutManager = LinearLayoutManager(context)
+                        adapter = communityAdapter
+                    }
                 }
                 else -> {
                     optionBtnCommunity.text = resources.getText(R.string.explore_community)
                     pbProgress.visibility = View.VISIBLE
                     ApiUtility().getAllThread(listThreadModel())
-                    ApiUtility().getMyCommunity(myCommunityModel(), userModel()?.id!!)
+                    ApiUtility().getMyCommunity(myCommunityModel(), userModel()?.id!!){message->Utility.customToast(requireContext(),message)}
                     pbProgress.visibility = View.GONE
 
                 }

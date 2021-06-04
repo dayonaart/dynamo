@@ -53,7 +53,8 @@ class ThreadChatRVAdapter(private val context: Context, val data: List<AllCommen
                 threadChatData.downvotes,
                 threadChatData.noReplies,
                 threadChatData.noReports,
-                null
+                null,
+            null
             )
             optionBtn.setOnClickListener {
                 performOptionsMenuClick(context, optionBtn, commentThread)

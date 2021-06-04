@@ -1,4 +1,5 @@
 package id.kumparan.dynamo.api
+
 import com.google.gson.annotations.SerializedName
 import id.kumparan.dynamo.*
 import id.kumparan.dynamo.model.*
@@ -47,6 +48,13 @@ interface ApiServices {
     fun addCommentToThread(@Body payload: CommentToThreadPayload): @JvmSuppressWildcards Call<WrappedResponse<CommentToThreadResponse>>
 
     @Headers("Content-Type: application/json")
+    @GET("${baseUrl}/thread/upvoteThread/{threadId}/{userId}")
+    fun upVoteThread(
+        @Path("threadId") threadId: Int,
+        @Path("userId") userCreateId: Int
+    ): @JvmSuppressWildcards Call<WrappedResponse<Any>>
+
+    @Headers("Content-Type: application/json")
     @GET("${baseUrl}/user")
     fun getAllUser(
     ): @JvmSuppressWildcards Call<WrappedListResponse<UserListModel>>
@@ -70,7 +78,7 @@ interface ApiServices {
     @Headers("Content-Type: application/json")
     @GET("${baseUrl}/thread/user/{id}")
     fun getAllThreadByUser(
-        @Path("id")userId: Int
+        @Path("id") userId: Int
     ): @JvmSuppressWildcards Call<WrappedListResponse<MyListThreadModel>>
 
     @Headers("Content-Type: application/json")
@@ -94,7 +102,7 @@ interface ApiServices {
     @Headers("Content-Type: application/json")
     @GET("${baseUrl}/user/resend-verification")
     fun resendEmailVerification(
-       @Query("email") email:String
+        @Query("email") email: String
     ): @JvmSuppressWildcards Call<User>
 
 }

@@ -19,6 +19,7 @@ import id.kumparan.dynamo.model.*
 import id.kumparan.dynamo.ui.community.data.PopularData
 import id.kumparan.dynamo.ui.community.rv.PopularParentRvAdapter
 import id.kumparan.dynamo.utility.ModelInjector
+import id.kumparan.dynamo.utility.Utility
 import kotlinx.android.synthetic.main.fragment_community_tab_popular.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -167,7 +168,7 @@ class Popular : Fragment() {
                 val res = response.body()
                 if (response.isSuccessful) {
                     if (res?.status == "Success") {
-                        ApiUtility().getMyCommunity(myCommunityModel(), userModel()?.id!!)
+                        ApiUtility().getMyCommunity(myCommunityModel(), userModel()?.id!!){message -> Utility.customToast(requireContext(),message) }
                         ApiUtility().getAllCommunity(communityModel())
                         ApiUtility().getMyThread(myThreadModel(), userModel()?.id!!)
                         loading.hide()

@@ -22,7 +22,8 @@ data class ListThreadModel(
     val downVote: Int?,
     val noComments: Int?,
     val noReports: Int?,
-    val score: Int?
+    val score: Int?,
+    val voteUserList:List<Any>?
 ) : Serializable
 
 class ListThreadModelFactory(private val listThreadModelRepository: ListThreadModelRepository) :
