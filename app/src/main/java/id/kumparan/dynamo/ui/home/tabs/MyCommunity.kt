@@ -53,12 +53,17 @@ class MyCommunity : Fragment() {
                     d.createdAt
                 }
                 val communityAdapter =
-                    MyCommunityRVAdapter(data, userModel()?.id!!) { data ->
-                        ApiUtility().upVoteThread(data.id!!, userModel()?.id!!) { message ->
+                    MyCommunityRVAdapter(data, userModel()?.id!!,{ upVote ->
+                        ApiUtility().upVoteThread(upVote.id!!, userModel()?.id!!) { message ->
                             Utility.customToast(requireContext(), message)
                             ApiUtility().getMyThread(myThreadModel(),userModel()?.id!!)
                         }
-                    }
+                    },{ downVote ->
+                        ApiUtility().downVoteThread(downVote.id!!, userModel()?.id!!) { message ->
+                            Utility.customToast(requireContext(), message)
+                            ApiUtility().getMyThread(myThreadModel(),userModel()?.id!!)
+                        }
+                    })
                 rvHomeMyCommunity.apply {
                     layoutManager = LinearLayoutManager(context)
                     adapter = communityAdapter

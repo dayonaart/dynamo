@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
+import id.kumparan.dynamo.DeleteThreadActivity
 import id.kumparan.dynamo.R
 import id.kumparan.dynamo.ReportThreadActivity
 import id.kumparan.dynamo.model.MyListThreadModel
@@ -71,7 +72,7 @@ class Utility {
             popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
                 override fun onMenuItemClick(item: MenuItem?): Boolean {
                     when (item?.itemId) {
-                        R.id.delete -> {
+                        R.id.report -> {
                             context.startActivity(reportThreadActivity)
                             return true
                         }
@@ -82,5 +83,31 @@ class Utility {
             popupMenu.show()
         }
 
+        fun performOptionsMenu2(context: Context, view: View, data: MyListThreadModel) {
+            val reportThreadActivity = Intent(context, ReportThreadActivity::class.java)
+            val deleteThreadActivity = Intent(context, DeleteThreadActivity::class.java)
+            reportThreadActivity.putExtra("data", data)
+            deleteThreadActivity.putExtra("data",data)
+            val popupMenu =
+                PopupMenu(context, view)
+            popupMenu.inflate(R.menu.option_menu_thread2)
+            popupMenu.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
+                override fun onMenuItemClick(item: MenuItem?): Boolean {
+                    when (item?.itemId) {
+                        R.id.report -> {
+                            context.startActivity(reportThreadActivity)
+                            return true
+                        }
+                        R.id.delete -> {
+                        context.startActivity(deleteThreadActivity)
+                            return true
+                        }
+                    }
+                    return false
+                }
+            })
+            popupMenu.show()
+        }
     }
+
 }

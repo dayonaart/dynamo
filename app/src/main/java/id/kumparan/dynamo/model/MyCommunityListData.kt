@@ -8,15 +8,19 @@ import java.io.Serializable
 
 
 data class MyCommunityModel(
-    val communityId: Int?,
-    val userId: String?,
+    val id: Int?,
+    val name: String?,
+    val description: String?,
     val isModerator: Boolean?,
+    val background:String?,
+    val avatar:String?,
     val createdAt: String?,
     val updatedAt: String?,
-    @SerializedName("Community.name") val communityName: String?,
-    @SerializedName("Community.categories") val myCommunityCategory: List<MyCommunityCategory>?,
-    @SerializedName("User.photo") val userPhoto: String?,
-    @SerializedName("Community.avatar") val communityAvatar:String?
+    val categories: List<MyCommunityCategory>?,
+    val rules:String?,
+    val noUsers:Int?,
+    val noMods:Int?,
+    val noThreads:Int?,
 ) : Serializable
 
 data class MyCommunityCategory(val id: Int?, val categoryName: String?) : Serializable

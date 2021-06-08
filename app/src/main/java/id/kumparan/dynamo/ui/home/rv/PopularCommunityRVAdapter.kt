@@ -22,7 +22,13 @@ import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
 
-class PopularCommunityRVAdapter(private val data: List<ListThreadModel>) :
+class PopularCommunityRVAdapter(
+    private val data: List<ListThreadModel>,
+    private val userId: Int,
+    private val upVoteClickListener: (myListThreadModel: MyListThreadModel) -> Unit,
+    private val downVoteClickListener:(myListThreadModel: MyListThreadModel)->Unit,
+
+    ) :
     RecyclerView.Adapter<PopularCommunityRVHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, p1: Int): PopularCommunityRVHolder {
@@ -36,7 +42,7 @@ class PopularCommunityRVAdapter(private val data: List<ListThreadModel>) :
     override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: PopularCommunityRVHolder, position: Int) {
-        holder.bindThread(data[position])
+        holder.bindThread(data[position],userId, upVoteClickListener,downVoteClickListener)
     }
 }
 
@@ -51,14 +57,22 @@ class PopularCommunityRVHolder(private val context: Context, view: View) :
     private val comments = view.comments
     private val openChat = view.openDetailCommunity
     private val optionBtn = view.optionBtn
+    private val upVoteBtn = view.voteUpBtn
+    private val downVoteBtn = view.voteDownBtn
 
     @SuppressLint("SetTextI18n")
-    fun bindThread(listThreadModel: ListThreadModel) {
+    fun bindThread(
+        listThreadModel: ListThreadModel,
+        userId: Int,
+        upVoteClickListener: (myListThreadModel: MyListThreadModel) -> Unit,
+        downVoteClickListener: (myListThreadModel: MyListThreadModel) -> Unit,
+        ) {
         tvName.text = listThreadModel.communityName
         tvUsername.text = listThreadModel.username
         tvDate.text = dateNow(listThreadModel.createdAt)
         tvDesc.text = listThreadModel.content
         comments.text = "${listThreadModel.noComments} Komentar"
+        val isVoted = listThreadModel.voteUserList?.find { it.userCreateId == userId }
         val detailThreadView = MyListThreadModel(
             listThreadModel.id,
             listThreadModel.title,
@@ -77,6 +91,19 @@ class PopularCommunityRVHolder(private val context: Context, view: View) :
             listThreadModel.score,
             null
         )
+        if (isVoted != null) {
+            upVoteBtn.setImageResource(R.drawable.ic_green_vote_arrow_up)
+        }else{
+            upVoteBtn.rotation= 180F
+            upVoteBtn.setImageResource(R.drawable.ic_arrow)
+        }
+        upVoteBtn.setOnClickListener {
+            upVoteClickListener(detailThreadView)
+        }
+        downVoteBtn.setOnClickListener {
+            downVoteClickListener(detailThreadView)
+        }
+
         openChat.setOnClickListener {
             openChat(context, detailThreadView)
         }

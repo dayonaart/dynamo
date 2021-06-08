@@ -2,10 +2,7 @@ package id.kumparan.dynamo.api
 
 import android.annotation.SuppressLint
 import android.util.Log
-import id.kumparan.dynamo.CommentToThreadPayload
-import id.kumparan.dynamo.CommentToThreadResponse
-import id.kumparan.dynamo.ReportThreadPayload
-import id.kumparan.dynamo.ReportThreadResponse
+import id.kumparan.dynamo.*
 import id.kumparan.dynamo.model.*
 import org.json.JSONObject
 import retrofit2.Call
@@ -263,12 +260,64 @@ class ApiUtility {
                     if (response.isSuccessful) {
                         message(res?.message ?: res?.status ?: "message not found")
                     } else {
-                        message(response.message()?:"${response.code()}")
+                        message(response.message() ?: "${response.code()}")
                     }
                 }
 
                 override fun onFailure(call: Call<WrappedResponse<Any>>, t: Throwable) {
                     message(t.message!!)
+                }
+
+            })
+    }
+
+    fun downVoteThread(threadId: Int, userId: Int, message: (message: String) -> Unit) {
+        Api.instance().downVoteThread(threadId, userId)
+            .enqueue(object : Callback<WrappedResponse<Any>> {
+                override fun onResponse(
+                    call: Call<WrappedResponse<Any>>,
+                    response: Response<WrappedResponse<Any>>
+                ) {
+                    val res = response.body()
+                    if (response.isSuccessful) {
+                        message(res?.message ?: res?.status ?: "message not found")
+                    } else {
+                        message(response.message() ?: "${response.code()}")
+                    }
+                }
+
+                override fun onFailure(call: Call<WrappedResponse<Any>>, t: Throwable) {
+                    message(t.message!!)
+                }
+
+            })
+    }
+
+
+    fun editCommunity(
+        communityId: Int,
+        payload: EditCommunityPayload,
+        message: (message: String?) -> Unit
+    ) {
+        Api.instance().editCommunity(communityId, payload)
+            .enqueue(object : Callback<WrappedResponse<EditCommunityResponse>> {
+                override fun onResponse(
+                    call: Call<WrappedResponse<EditCommunityResponse>>,
+                    response: Response<WrappedResponse<EditCommunityResponse>>
+                ) {
+                    val res = response.body()
+                    if (response.isSuccessful) {
+                        message(res?.message ?: res?.status ?: "Message not Found")
+                    } else {
+                        message(res?.message ?: res?.status ?: "Message not Found")
+                    }
+                }
+
+                override fun onFailure(
+                    call: Call<WrappedResponse<EditCommunityResponse>>,
+                    t: Throwable
+                ) {
+                    message(t.message ?: "Message not Found")
                 }
 
             })

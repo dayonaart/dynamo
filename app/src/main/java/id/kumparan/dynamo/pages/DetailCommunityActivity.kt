@@ -1,5 +1,6 @@
 package id.kumparan.dynamo.pages
 
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Spannable
@@ -12,10 +13,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.map
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
+import id.kumparan.dynamo.EditCommunityInfo
 import id.kumparan.dynamo.R
 import id.kumparan.dynamo.model.CommunityListModel
 import id.kumparan.dynamo.model.CommunityListModelViewModel
-import id.kumparan.dynamo.model.MyCommunityModel
 import id.kumparan.dynamo.model.UserViewModel
 import id.kumparan.dynamo.pages.adapter.DetailCommunityViewPager
 import id.kumparan.dynamo.utility.ModelInjector
@@ -23,25 +24,42 @@ import kotlinx.android.synthetic.main.activity_detail_community.*
 
 class DetailCommunityActivity : AppCompatActivity() {
     private val fragmentTitleList = mutableListOf("Thread", "Peraturan", "Moderator")
+
     private val factory = ModelInjector.provideListCommunityViewModeFactory()
     private val userFactory = ModelInjector.provideUserViewModelFactory()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail_community)
         val communityId = intent.extras?.get("id") as Int
+        val isModerator = intent.extras?.get("isModerator") as Boolean
         val data = communityListModel().getData().map {
             it.find { f -> f.id == communityId }
         }
         initDetailCommunity(data)
-        settingTab(data)
+        settingTab(data,isModerator)
         popScreen.setOnClickListener {
             onBackPressed()
         }
-        joinBtnOrExit.setOnClickListener {
-        }
-
+        initModerator(isModerator, data)
     }
 
+    private fun initModerator(isModerator: Boolean, data: LiveData<CommunityListModel?>) {
+        val editCommunityActivity = Intent(this, EditCommunityInfo::class.java)
+        data.observe(this, {
+            editCommunityActivity.putExtra("data", it)
+            if (isModerator) {
+                isModeratorBtn.setText(R.string.change)
+                isModeratorBtn.setOnClickListener {
+                    startActivity(editCommunityActivity)
+                }
+            } else {
+                isModeratorBtn.setText(R.string.exit)
+                isModeratorBtn.setOnClickListener { }
+
+            }
+        })
+
+    }
 
     private fun communityListModel(): CommunityListModelViewModel {
         return ViewModelProvider(this, factory).get(CommunityListModelViewModel::class.java)
@@ -73,7 +91,7 @@ class DetailCommunityActivity : AppCompatActivity() {
         data.observe(this, {
             if (it !== null) {
                 communityDetailName.text = it.name
-                communityDetailDescription.text = it.description
+                communityDetailDescription.text = "${it.description}"
                 threadCount.text =
                     setCountText("${it.noThreads}", R.color.kumparan_purple51, Typeface.BOLD)
                 threadCount.append(setCountText("\nThread", R.color.black, Typeface.NORMAL))
@@ -84,8 +102,8 @@ class DetailCommunityActivity : AppCompatActivity() {
         })
     }
 
-    private fun settingTab(communityListLiveData: LiveData<CommunityListModel?>) {
-        detailCommunityViewPager.adapter = DetailCommunityViewPager(this, communityListLiveData)
+    private fun settingTab(communityListLiveData: LiveData<CommunityListModel?>,isModerator: Boolean) {
+        detailCommunityViewPager.adapter = DetailCommunityViewPager(this, communityListLiveData,isModerator)
         TabLayoutMediator(detailCommunityTabs, detailCommunityViewPager) { tab, pos ->
             tab.text = fragmentTitleList[pos]
         }.attach()

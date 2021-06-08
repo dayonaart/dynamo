@@ -140,23 +140,13 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/forgotPassword"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:text="@string/forgot_password"
-                android:textColor="@color/kumparan_purple70" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/registerBtn"
                 style="@style/MaterialButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="30dp"
                 android:background="@drawable/rounded_button_selector"
                 android:enabled="false"
                 android:text="@string/register"

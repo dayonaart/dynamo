@@ -6,38 +6,55 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.gson.Gson
-import com.google.gson.annotations.SerializedName
 import id.kumparan.dynamo.api.Api
 import id.kumparan.dynamo.api.User
-import id.kumparan.dynamo.api.WrappedResponse
 import id.kumparan.dynamo.localstorage.LocalStorage
 import id.kumparan.dynamo.model.UserModel
 import id.kumparan.dynamo.model.UserViewModel
 import id.kumparan.dynamo.utility.*
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_login.closeError
+import kotlinx.android.synthetic.main.activity_login.emailField
+import kotlinx.android.synthetic.main.activity_login.emailLayout
+import kotlinx.android.synthetic.main.activity_login.errorCardLayout
+import kotlinx.android.synthetic.main.activity_login.errorTextCard
+import kotlinx.android.synthetic.main.activity_login.passwordField
+import kotlinx.android.synthetic.main.activity_login.passwordLayout
+import kotlinx.android.synthetic.main.activity_login.popScreen
+import kotlinx.android.synthetic.main.activity_login.signupContainer
+import kotlinx.android.synthetic.main.activity_register.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.Serializable
 
 class LoginActivity : AppCompatActivity() {
     private val factory = ModelInjector.provideUserViewModelFactory()
     private val API = Api.instance()
     private val gson = Gson()
     lateinit var googleClient: GoogleSignInClient
+    lateinit var callbackManager: CallbackManager
     private val RC_SIGN_IN = 1010
     private val loading = CustomLoading()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         supportActionBar?.hide()
+        callbackManager = CallbackManager.Factory.create()
         googleClient = GoogleSignIn.getClient(this, GSO)
         popScreen.setOnClickListener {
             onBackPressed()
@@ -45,10 +62,13 @@ class LoginActivity : AppCompatActivity() {
         initEmailField()
         initPasswordField()
         loginBtn.setOnClickListener {
-            submit(this)
+            submit(this,payload(emailField.text.toString(), passwordField.text.toString(),null))
         }
         googleLogin.setOnClickListener {
             googleSignIn()
+        }
+        facebookLogin.setOnClickListener {
+            facebookLogin(this)
         }
         closeError.setOnClickListener {
             errorCardLayout.visibility = View.GONE
@@ -115,9 +135,40 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun submit(context: Context) {
+    private fun facebookLogin(context: Context) {
+        LoginManager.getInstance().logInWithReadPermissions(this, listOf("public_profile", "email"))
+        LoginManager.getInstance()
+            .registerCallback(callbackManager, object : FacebookCallback<LoginResult?> {
+                override fun onSuccess(loginResult: LoginResult?) {
+                    Api.getUserProfileFacebook(
+                        loginResult?.accessToken,
+                        loginResult?.accessToken?.userId
+                    ) {
+                        if (it.email != null) {
+                            submit(context,payload(it.email,null,"facebook"))
+                        } else {
+                            Toast.makeText(context, "email must not be null", Toast.LENGTH_LONG)
+                                .show()
+                        }
+                    }
+                }
+
+                override fun onCancel() {
+                    Toast.makeText(context, "Login Cancelled", Toast.LENGTH_LONG).show()
+                }
+
+                override fun onError(exception: FacebookException) {
+                    Toast.makeText(context, exception.message, Toast.LENGTH_LONG).show()
+                }
+            })
+    }
+
+    private fun payload(email: String, password: String?,isRegisterUsing: String?): LoginPayload {
+        return LoginPayload(email, password,isRegisterUsing)
+    }
+
+    private fun submit(context: Context,payload: LoginPayload) {
         errorCardLayout.visibility = View.GONE
-        val payload = LoginPayload(emailField.text.toString(), passwordField.text.toString())
         loading.show(this, "Mohon tunggu")
         API.login(payload).enqueue(object : Callback<User> {
             override fun onFailure(call: Call<User>, t: Throwable) {
@@ -185,7 +236,7 @@ class LoginActivity : AppCompatActivity() {
                 account?.idToken,
                 null, null, null
             )
-            submit(context)
+            submit(context,payload(userData.email!!, null,"google"))
         } catch (e: ApiException) {
             // Sign in was unsuccessful
             Log.e(
@@ -209,6 +260,5 @@ class LoginActivity : AppCompatActivity() {
 }
 
 data class LoginPayload(
-    @SerializedName("email") val email: String,
-    @SerializedName("password") val password: String
-)
+    val email: String, val password: String?, val isRegisterUsing: String?
+) : Serializable

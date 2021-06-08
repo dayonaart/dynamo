@@ -28,7 +28,7 @@
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Laporkan Thread"
+        android:text="@string/delete_thread"
         android:textStyle="bold"
         android:textSize="20sp"/>
 
@@ -36,7 +36,7 @@
         android:id="@+id/reportDescBS"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/are_you_sure_report_thread"
+        android:text="@string/are_you_sure_delete_thread"
         android:textSize="18sp" />
 
     <com.google.android.material.button.MaterialButton

@@ -36,18 +36,18 @@ class CommunityRVAdapter(private val data: List<MyCommunityModel>) :
 
         @SuppressLint("SetTextI18n")
         fun bindCommunity(myCommunityModel: MyCommunityModel) {
-            communityName.text = "${myCommunityModel.communityName} Moderator : ${myCommunityModel.isModerator}"
-            communityThread.text = "Thread not found · "
-            communityMember.text = "Member not found"
-            if ((myCommunityModel.userPhoto != "" && myCommunityModel.userPhoto != null) && !myCommunityModel.userPhoto.contains(
+            communityName.text = "${myCommunityModel.name}"
+            communityThread.text = "${myCommunityModel.noThreads} Thread · "
+            communityMember.text = "${myCommunityModel.noUsers} Member"
+            if ((myCommunityModel.avatar != "" && myCommunityModel.avatar != null) && !myCommunityModel.avatar.contains(
                     "data"
                 )
             ) {
-                communityImg.setImageBitmap(convertBase64ToBitmap(myCommunityModel.userPhoto))
+                communityImg.setImageBitmap(convertBase64ToBitmap(myCommunityModel.avatar))
             }
 
             openDetailCommunity.setOnClickListener {
-                openDetailCommunity(context, myCommunityModel.communityId)
+                openDetailCommunity(context, myCommunityModel.id,myCommunityModel.isModerator?:false)
             }
         }
 
@@ -57,9 +57,10 @@ class CommunityRVAdapter(private val data: List<MyCommunityModel>) :
             return BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.size)
         }
 
-        private fun openDetailCommunity(context: Context, communityId: Int?) {
+        private fun openDetailCommunity(context: Context, communityId: Int?,isModerator:Boolean) {
             val detailCommunity = Intent(context, DetailCommunityActivity::class.java)
             detailCommunity.putExtra("id", communityId)
+            detailCommunity.putExtra("isModerator",isModerator)
             context.startActivity(detailCommunity)
 
         }

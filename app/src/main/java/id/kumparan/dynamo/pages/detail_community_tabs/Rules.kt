@@ -10,7 +10,7 @@ import id.kumparan.dynamo.R
 import id.kumparan.dynamo.model.CommunityListModel
 import kotlinx.android.synthetic.main.detail_community_tab_rules.*
 
-class Rules(private val communityListLiveData: LiveData<CommunityListModel?>):Fragment() {
+class Rules(private val communityListLiveData: LiveData<CommunityListModel?>,private val isModerator:Boolean):Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -21,6 +21,9 @@ class Rules(private val communityListLiveData: LiveData<CommunityListModel?>):Fr
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        if (isModerator){
+            changeRuleBtn.visibility=View.VISIBLE
+        }
         communityListLiveData.observe(viewLifecycleOwner, {
             if (it?.rules.isNullOrEmpty()) {
                 haveNoRule.visibility = View.VISIBLE

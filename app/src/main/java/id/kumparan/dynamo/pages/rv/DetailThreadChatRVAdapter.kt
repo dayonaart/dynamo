@@ -18,7 +18,7 @@ import java.time.Instant
 import java.util.*
 import kotlin.random.Random
 
-class DetailThreadChatRVAdapter(private val context: Context, private val data: List<ListThreadModel>) :
+class DetailThreadChatRVAdapter(private val context: Context, private val data: List<ListThreadModel>,private val isModerator:Boolean) :
     RecyclerView.Adapter<DetailThreadChatRVAdapter.ViewHolder>() {
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val random = Random
@@ -63,7 +63,11 @@ class DetailThreadChatRVAdapter(private val context: Context, private val data: 
                 null
             )
             optionBtn.setOnClickListener {
-                Utility.performOptionsMenu(context,optionBtn,detailThreadView)
+                if (isModerator){
+                    Utility.performOptionsMenu2(context,optionBtn,detailThreadView)
+                }else{
+                    Utility.performOptionsMenu(context,optionBtn,detailThreadView)
+                }
             }
             openChat.setOnClickListener {
                 openChat(context,detailThreadView)

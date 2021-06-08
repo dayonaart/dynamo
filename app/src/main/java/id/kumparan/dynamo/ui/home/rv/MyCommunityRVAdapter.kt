@@ -25,6 +25,7 @@ class MyCommunityRVAdapter(
     private val data: List<MyListThreadModel>,
     private val userId:Int,
     private val upVoteClickListener:(myListThreadModel: MyListThreadModel)->Unit,
+    private val downVoteClickListener:(myListThreadModel: MyListThreadModel)->Unit,
 ) :
     RecyclerView.Adapter<MyCommunityRVHolder>() {
 
@@ -40,13 +41,12 @@ class MyCommunityRVAdapter(
     override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: MyCommunityRVHolder, position: Int) {
-        holder.bindThread(data[position],userId,upVoteClickListener)
+        holder.bindThread(data[position],userId,upVoteClickListener,downVoteClickListener)
     }
 }
 
 class MyCommunityRVHolder(private val context: Context, view: View) :
     RecyclerView.ViewHolder(view) {
-    private val userFactory = ModelInjector.provideUserViewModelFactory()
     private val tvName = view.tvMyCommunityName
     private val tvUsername = view.tvMyUsername
     private val tvDate = view.tvMyCommunityDate
@@ -61,7 +61,9 @@ class MyCommunityRVHolder(private val context: Context, view: View) :
     private val downVoteBtn=view.voteDownBtn
     @SuppressLint("SetTextI18n")
     fun bindThread(
-        myListThreadModel: MyListThreadModel,userId:Int,upVoteClickListener:(myListThreadModel: MyListThreadModel)->Unit,
+        myListThreadModel: MyListThreadModel,userId:Int,
+        upVoteClickListener: (myListThreadModel: MyListThreadModel) -> Unit,
+        downVoteClickListener: (myListThreadModel: MyListThreadModel) -> Unit,
     ) {
         tvName.text = myListThreadModel.communityName
         tvUsername.text = myListThreadModel.username
@@ -86,7 +88,9 @@ class MyCommunityRVHolder(private val context: Context, view: View) :
         upVoteBtn.setOnClickListener {
             upVoteClickListener(myListThreadModel)
         }
-        downVoteBtn.setOnClickListener {  }
+        downVoteBtn.setOnClickListener {
+            downVoteClickListener(myListThreadModel)
+        }
     }
 
     @SuppressLint("SimpleDateFormat")

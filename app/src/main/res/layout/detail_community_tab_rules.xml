@@ -41,6 +41,7 @@
             android:paddingVertical="20dp" />
 
         <com.google.android.material.button.MaterialButton
+            android:visibility="gone"
             android:id="@+id/changeRuleBtn"
             style="@style/ButtonOutlineTheme"
             android:layout_width="match_parent"

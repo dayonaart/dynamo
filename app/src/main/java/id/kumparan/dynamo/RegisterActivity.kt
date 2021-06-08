@@ -212,15 +212,13 @@ class RegisterActivity : AppCompatActivity() {
             submit(context, payload)
         } catch (e: ApiException) {
             // Sign in was unsuccessful
-            Log.e(
-                "failed code=", e.statusCode.toString()
-            )
+            Toast.makeText(context, "failed code= ${e.message}", Toast.LENGTH_LONG).show()
+
         }
     }
 
     private fun facebookSignUp(context: Context) {
         LoginManager.getInstance().logInWithReadPermissions(this, listOf("public_profile", "email"))
-        // Callback registration
         LoginManager.getInstance()
             .registerCallback(callbackManager, object : FacebookCallback<LoginResult?> {
                 override fun onSuccess(loginResult: LoginResult?) {
@@ -228,7 +226,11 @@ class RegisterActivity : AppCompatActivity() {
                         loginResult?.accessToken,
                         loginResult?.accessToken?.userId
                     ) {
-                        submit(context, RegisterPayload(it.firstName, it.email, "", "facebook"))
+                        if (it.email!=null) {
+                            submit(context, RegisterPayload(it.firstName, it.email, "", "facebook"))
+                        }else{
+                            Toast.makeText(context, "email must not be null", Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
 

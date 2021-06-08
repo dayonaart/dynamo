@@ -15,6 +15,7 @@ import id.kumparan.dynamo.model.UserModel
 import id.kumparan.dynamo.model.UserViewModel
 import id.kumparan.dynamo.ui.home.rv.PopularCommunityRVAdapter
 import id.kumparan.dynamo.utility.ModelInjector
+import id.kumparan.dynamo.utility.Utility
 import kotlinx.android.synthetic.main.fragment_community_tab_popular.rvPopular
 import kotlinx.android.synthetic.main.fragment_home_tab_popular.*
 
@@ -22,9 +23,6 @@ class Popular : Fragment() {
     private val allThreadFactory = ModelInjector.provideListThreadViewModelFactory()
     private val userFactory = ModelInjector.provideUserViewModelFactory()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -33,17 +31,23 @@ class Popular : Fragment() {
         return inflater.inflate(R.layout.fragment_home_tab_popular, container, false)
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         listThreadModel().getData().observe(viewLifecycleOwner, Observer {
             when {
                 it.isNotEmpty() -> {
                     val popularQuery=it.sortedByDescending { s->s.noComments }
-                    val communityAdapter = PopularCommunityRVAdapter(popularQuery)
+                    val communityAdapter = PopularCommunityRVAdapter(popularQuery,userModel()?.id!!,{ upVote ->
+                        ApiUtility().upVoteThread(upVote.id!!, userModel()?.id!!) { message ->
+                            Utility.customToast(requireContext(), message)
+                            getData()
+                        }
+                    },{ downVote ->
+                        ApiUtility().downVoteThread(downVote.id!!, userModel()?.id!!) { message ->
+                            Utility.customToast(requireContext(), message)
+                            getData()
+                        }
+                    })
                     rvPopular.apply {
                         layoutManager = LinearLayoutManager(context)
                         adapter = communityAdapter

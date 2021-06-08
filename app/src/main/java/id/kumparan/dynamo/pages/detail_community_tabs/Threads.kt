@@ -17,7 +17,7 @@ import id.kumparan.dynamo.pages.rv.ThreadChatRVAdapter
 import id.kumparan.dynamo.utility.ModelInjector
 import kotlinx.android.synthetic.main.rv_comments_detail_thread.*
 
-class Threads(private val communityListLiveData: LiveData<CommunityListModel?>):Fragment() {
+class Threads(private val communityListLiveData: LiveData<CommunityListModel?>,private val isModerator:Boolean):Fragment() {
     private val allCommentFactory = ModelInjector.provideAllCommentListViewModelFactory()
     private val listAllThreadFactory = ModelInjector.provideListThreadViewModelFactory()
 
@@ -34,7 +34,7 @@ class Threads(private val communityListLiveData: LiveData<CommunityListModel?>):
         communityListLiveData.observe(viewLifecycleOwner,{
             listThreadModel().getData().observe(viewLifecycleOwner,{thread->
                 val threadQuery=thread.filter { f->f.communityId==it?.id }
-                val threadAdapter= DetailThreadChatRVAdapter(requireContext(), threadQuery)
+                val threadAdapter= DetailThreadChatRVAdapter(requireContext(), threadQuery,isModerator)
                 if (threadQuery.isEmpty()){
                     haveNoThread.visibility=View.VISIBLE
                 }else{

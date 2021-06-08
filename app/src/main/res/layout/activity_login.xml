@@ -172,7 +172,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_facebook"
-                android:text="@string/facebook_sign_up" />
+                android:text="@string/facebook_login" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/googleLogin"
@@ -180,7 +180,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/ic_google"
-                android:text="@string/google_sign_up" />
+                android:text="@string/google_login" />
 
         </LinearLayout>
     </ScrollView>

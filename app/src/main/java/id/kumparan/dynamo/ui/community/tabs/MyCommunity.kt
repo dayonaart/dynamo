@@ -56,7 +56,10 @@ class MyCommunity : Fragment() {
     }
 
     private fun listThreadModel(): ListThreadModelViewModel {
-        return ViewModelProvider(this, listAllThreadFactory).get(ListThreadModelViewModel::class.java)
+        return ViewModelProvider(
+            this,
+            listAllThreadFactory
+        ).get(ListThreadModelViewModel::class.java)
     }
 
     private fun myCommunityModel(): MyCommunityModelViewModel {
@@ -70,9 +73,10 @@ class MyCommunity : Fragment() {
         myCommunityModel().getData().observe(viewLifecycleOwner, Observer { its ->
             when {
                 its.isNotEmpty() -> {
+                    val removeNull = its.filter { it.id != null }
                     pbProgress.visibility = View.GONE
                     notRegisterLayout.visibility = View.GONE
-                    val communityAdapter = CommunityRVAdapter(its)
+                    val communityAdapter = CommunityRVAdapter(removeNull)
                     rvCommunityMyCommunity.apply {
                         layoutManager = LinearLayoutManager(context)
                         adapter = communityAdapter
@@ -82,7 +86,10 @@ class MyCommunity : Fragment() {
                     optionBtnCommunity.text = resources.getText(R.string.explore_community)
                     pbProgress.visibility = View.VISIBLE
                     ApiUtility().getAllThread(listThreadModel())
-                    ApiUtility().getMyCommunity(myCommunityModel(), userModel()?.id!!){message->Utility.customToast(requireContext(),message)}
+                    ApiUtility().getMyCommunity(
+                        myCommunityModel(),
+                        userModel()?.id!!
+                    ) { message -> Utility.customToast(requireContext(), message) }
                     pbProgress.visibility = View.GONE
 
                 }

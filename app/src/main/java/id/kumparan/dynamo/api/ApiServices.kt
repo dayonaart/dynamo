@@ -48,8 +48,29 @@ interface ApiServices {
     fun addCommentToThread(@Body payload: CommentToThreadPayload): @JvmSuppressWildcards Call<WrappedResponse<CommentToThreadResponse>>
 
     @Headers("Content-Type: application/json")
+    @POST("${baseUrl}/community/update/{id}")
+    fun editCommunity(
+        @Path("id") communityId: Int,
+        @Body payload: EditCommunityPayload
+    ): @JvmSuppressWildcards Call<WrappedResponse<EditCommunityResponse>>
+
+    @Headers("Content-Type: application/json")
+    @POST("${baseUrl}/thread/delete/{id}")
+    fun deleteThread(
+        @Path("id") threadId: Int,
+        @Body payload: EditCommunityPayload
+    ): @JvmSuppressWildcards Call<WrappedResponse<EditCommunityResponse>>
+
+    @Headers("Content-Type: application/json")
     @GET("${baseUrl}/thread/upvoteThread/{threadId}/{userId}")
     fun upVoteThread(
+        @Path("threadId") threadId: Int,
+        @Path("userId") userCreateId: Int
+    ): @JvmSuppressWildcards Call<WrappedResponse<Any>>
+
+    @Headers("Content-Type: application/json")
+    @GET("${baseUrl}/thread/downvoteThread/{threadId}/{userId}")
+    fun downVoteThread(
         @Path("threadId") threadId: Int,
         @Path("userId") userCreateId: Int
     ): @JvmSuppressWildcards Call<WrappedResponse<Any>>
@@ -104,7 +125,6 @@ interface ApiServices {
     fun resendEmailVerification(
         @Query("email") email: String
     ): @JvmSuppressWildcards Call<User>
-
 }
 
 data class WrappedResponse<T>(

@@ -91,7 +91,7 @@ class CreateThreadActivity : AppCompatActivity() {
 
     private fun setSpinner() {
         myCommunityViewModel().getData().observe(this, {
-            val listSpinner = it.map { name -> name.communityName }
+            val listSpinner = it.map { name -> name.name }
             val adapter: ArrayAdapter<String> =
                 ArrayAdapter(this, R.layout.support_simple_spinner_dropdown_item, listSpinner)
             communitySpinner.adapter = adapter
@@ -104,7 +104,7 @@ class CreateThreadActivity : AppCompatActivity() {
         loading.show(this, "Please Wait")
         val indexSpinner = communitySpinner?.selectedItemPosition
         val communityId =
-            myCommunityViewModel().getData().value?.get(indexSpinner!!)?.communityId
+            myCommunityViewModel().getData().value?.get(indexSpinner!!)?.id
         val payload =
             AddThreadModelPayload(
                 title,
