@@ -13,7 +13,7 @@ import retrofit2.http.*
 
 interface ApiServices {
     companion object {
-        const val baseUrl = "http://147.139.192.20:9991/api/v1"
+        const val baseUrl = "XXXXXXXXXXX"
     }
 
     @Headers("Content-Type: application/json")
